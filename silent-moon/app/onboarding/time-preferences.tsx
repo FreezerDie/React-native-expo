@@ -26,7 +26,7 @@ const DAYS = [
 ];
 
 export default function TimePreferencesScreen() {
-  const { state, dispatch } = useApp();
+  const { state, dispatch, updateUserPrefs } = useApp();
   const [selectedTime, setSelectedTime] = useState<string>(state.userPreferences.preferredTime);
   const [selectedDays, setSelectedDays] = useState<string[]>(state.userPreferences.preferredDays);
 
@@ -38,7 +38,7 @@ export default function TimePreferencesScreen() {
     );
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!selectedTime || selectedDays.length === 0) {
       return;
     }
@@ -55,6 +55,12 @@ export default function TimePreferencesScreen() {
       type: 'COMPLETE_ONBOARDING',
       payload: userPreferences,
     });
+
+    // Persist the preferences to user data
+    const result = await updateUserPrefs(userPreferences);
+    if (!result.success) {
+      console.error('Failed to save user preferences:', result.error);
+    }
 
     router.replace('/(tabs)');
   };

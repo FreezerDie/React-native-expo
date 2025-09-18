@@ -24,7 +24,20 @@ export default function AuthScreen() {
 
       const result = await login(username, password);
       if (result.success) {
-        router.replace('/onboarding/welcome');
+        console.log('Auth - Login successful, redirecting based on onboarding state');
+        // Small delay to ensure state has updated
+        setTimeout(() => {
+          const userPrefs = state.auth.currentUser?.preferences;
+          const hasCompletedOnboarding = userPrefs && userPrefs.selectedTopics.length > 0 && userPrefs.preferredTime !== '';
+          console.log('Auth - User preferences after login:', userPrefs);
+          console.log('Auth - Has completed onboarding:', hasCompletedOnboarding);
+
+          if (hasCompletedOnboarding) {
+            router.replace('/(tabs)');
+          } else {
+            router.replace('/onboarding/welcome');
+          }
+        }, 100);
       } else {
         Alert.alert('Login Failed', result.error || 'An error occurred during login');
       }
@@ -40,7 +53,11 @@ export default function AuthScreen() {
 
       const result = await register(name, username, password);
       if (result.success) {
-        router.replace('/onboarding/welcome');
+        console.log('Auth - Registration successful, redirecting to onboarding');
+        // New users always go to onboarding
+        setTimeout(() => {
+          router.replace('/onboarding/welcome');
+        }, 100);
       } else {
         Alert.alert('Registration Failed', result.error || 'An error occurred during registration');
       }

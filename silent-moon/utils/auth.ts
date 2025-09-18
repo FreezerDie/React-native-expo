@@ -220,7 +220,7 @@ export const updateUserPreferences = async (
       completedSessions: 0,
       totalMeditationTime: 0,
       streakCount: 0,
-      ...user.preferences,
+      ...(user.preferences || {}),
       ...preferences
     };
     await saveUser(user);

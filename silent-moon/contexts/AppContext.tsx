@@ -143,6 +143,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
 
     case 'LOGIN_SUCCESS':
+      const userPreferences = action.payload.preferences || state.userPreferences;
+      const isOnboarded = userPreferences.selectedTopics.length > 0 && userPreferences.preferredTime !== '';
+
+      console.log('LOGIN_SUCCESS - user preferences:', userPreferences);
+      console.log('LOGIN_SUCCESS - calculated isOnboarded:', isOnboarded);
+
       return {
         ...state,
         auth: {
@@ -150,8 +156,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
           currentUser: action.payload,
           isLoading: false,
         },
-        userPreferences: action.payload.preferences || state.userPreferences,
-        isOnboarded: true, // Assuming logged-in users have completed onboarding
+        userPreferences,
+        isOnboarded,
       };
 
     case 'LOGOUT':
