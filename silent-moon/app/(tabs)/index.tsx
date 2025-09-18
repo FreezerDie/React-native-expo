@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { useApp } from '@/contexts/AppContext';
@@ -12,30 +12,23 @@ const CATEGORIES = [
   {
     id: 'focus',
     title: 'Focus',
-    emoji: '🎯',
+    emoji: '',
     description: 'Attention & Concentration',
-    gradient: ['#FF6B6B', '#EE5A52'],
-  },
-  {
-    id: 'happiness',
-    title: 'Happiness',
-    emoji: '😊',
-    description: 'Mood & Positivity',
-    gradient: ['#FFD93D', '#FFB347'],
+    gradient: ['#FF6B6B', '#EE5A52'] as const,
   },
   {
     id: 'sleep',
     title: 'Sleep',
-    emoji: '🌙',
+    emoji: '',
     description: 'Rest & Relaxation',
-    gradient: ['#6C5CE7', '#A29BFE'],
+    gradient: ['#6C5CE7', '#A29BFE'] as const,
   },
   {
     id: 'music',
     title: 'Music',
-    emoji: '🎵',
+    emoji: '',
     description: 'Ambient Sounds',
-    gradient: ['#A8E6CF', '#52B788'],
+    gradient: ['#A8E6CF', '#52B788'] as const,
   },
 ];
 
@@ -76,7 +69,7 @@ export default function HomeScreen() {
               colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
               style={styles.cardGradient}
             >
-              <Text style={styles.cardEmoji}>🧘‍♀️</Text>
+              <Text style={styles.cardEmoji}></Text>
               <Text style={styles.cardTitle}>Daily Meditation</Text>
               <Text style={styles.cardSubtitle}>10 minutes • Morning Focus</Text>
               <TouchableOpacity style={styles.startButton}>
@@ -89,8 +82,7 @@ export default function HomeScreen() {
             <Text style={styles.sectionTitle}>Explore Categories</Text>
             <View style={styles.categoriesGrid}>
               {CATEGORIES.map((category) => (
-                <Link key={category.id} href={`/(tabs)/${category.id}`} asChild>
-                  <TouchableOpacity style={styles.categoryCard}>
+                <TouchableOpacity key={category.id} style={styles.categoryCard} onPress={() => router.push(`/(tabs)/${category.id}` as any)}>
                     <LinearGradient
                       colors={category.gradient}
                       style={styles.categoryGradient}
@@ -99,8 +91,7 @@ export default function HomeScreen() {
                       <Text style={styles.categoryTitle}>{category.title}</Text>
                       <Text style={styles.categoryDescription}>{category.description}</Text>
                     </LinearGradient>
-                  </TouchableOpacity>
-                </Link>
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -117,7 +108,7 @@ export default function HomeScreen() {
                   colors={['#FF6B6B', '#EE5A52']}
                   style={styles.recommendationGradient}
                 >
-                  <Text style={styles.recommendationEmoji}>🌅</Text>
+                  <Text style={styles.recommendationEmoji}></Text>
                   <Text style={styles.recommendationTitle}>Morning Calm</Text>
                   <Text style={styles.recommendationDuration}>15 min</Text>
                 </LinearGradient>
@@ -128,7 +119,7 @@ export default function HomeScreen() {
                   colors={['#6C5CE7', '#A29BFE']}
                   style={styles.recommendationGradient}
                 >
-                  <Text style={styles.recommendationEmoji}>🌙</Text>
+                  <Text style={styles.recommendationEmoji}></Text>
                   <Text style={styles.recommendationTitle}>Sleep Story</Text>
                   <Text style={styles.recommendationDuration}>20 min</Text>
                 </LinearGradient>
@@ -139,7 +130,7 @@ export default function HomeScreen() {
                   colors={['#A8E6CF', '#52B788']}
                   style={styles.recommendationGradient}
                 >
-                  <Text style={styles.recommendationEmoji}>🎵</Text>
+                  <Text style={styles.recommendationEmoji}></Text>
                   <Text style={styles.recommendationTitle}>Ocean Waves</Text>
                   <Text style={styles.recommendationDuration}>∞</Text>
                 </LinearGradient>
@@ -154,8 +145,8 @@ export default function HomeScreen() {
                 state.recentSessions.slice(0, 3).map((session, index) => (
                   <View key={session.id} style={styles.activityItem}>
                     <Text style={styles.activityEmoji}>
-                      {session.title.includes('Meditation') ? '🧘‍♀️' :
-                       session.title.includes('Sleep') ? '🌙' : '🎵'}
+                      {session.title.includes('Meditation') ? '' :
+                       session.title.includes('Sleep') ? '' : ''}
                     </Text>
                     <View style={styles.activityContent}>
                       <Text style={styles.activityTitle}>{session.title}</Text>
@@ -167,7 +158,7 @@ export default function HomeScreen() {
                 ))
               ) : (
                 <View style={styles.activityItem}>
-                  <Text style={styles.activityEmoji}>🎯</Text>
+                  <Text style={styles.activityEmoji}></Text>
                   <View style={styles.activityContent}>
                     <Text style={styles.activityTitle}>Start your first session!</Text>
                     <Text style={styles.activityTime}>Choose from our meditation collection</Text>

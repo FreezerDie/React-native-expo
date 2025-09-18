@@ -130,17 +130,17 @@ export default function MeditationPlayer() {
 
             <View style={styles.controls}>
               <TouchableOpacity style={styles.controlButton} onPress={skipBackward}>
-                <Text style={styles.controlButtonText}>⏪</Text>
+                <Text style={styles.controlButtonText}></Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.playButton} onPress={togglePlayback}>
                 <Text style={styles.playButtonText}>
-                  {isPlaying ? '⏸️' : '▶️'}
+                  {isPlaying ? '' : ''}
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.controlButton} onPress={skipForward}>
-                <Text style={styles.controlButtonText}>⏩</Text>
+                <Text style={styles.controlButtonText}></Text>
               </TouchableOpacity>
             </View>
           </View>

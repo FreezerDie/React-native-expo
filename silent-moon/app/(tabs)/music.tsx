@@ -8,7 +8,7 @@ const MUSIC_CATEGORIES = [
     id: 'nature',
     title: 'Nature Sounds',
     description: 'Forest, rain, ocean waves',
-    emoji: '🌲',
+    emoji: '',
     gradient: ['#A8E6CF', '#52B788'],
     tracks: 25,
   },
@@ -16,7 +16,7 @@ const MUSIC_CATEGORIES = [
     id: 'ambient',
     title: 'Ambient',
     description: 'Calming electronic tones',
-    emoji: '🎵',
+    emoji: '',
     gradient: ['#667EEA', '#764BA2'],
     tracks: 18,
   },
@@ -24,7 +24,7 @@ const MUSIC_CATEGORIES = [
     id: 'instrumental',
     title: 'Instrumental',
     description: 'Piano, guitar, strings',
-    emoji: '🎼',
+    emoji: '',
     gradient: ['#F093FB', '#F5576C'],
     tracks: 32,
   },
@@ -32,7 +32,7 @@ const MUSIC_CATEGORIES = [
     id: 'meditation-bells',
     title: 'Meditation Bells',
     description: 'Tibetan bowls and chimes',
-    emoji: '🔔',
+    emoji: '',
     gradient: ['#4ECDC4', '#44A08D'],
     tracks: 15,
   },
@@ -44,28 +44,28 @@ const POPULAR_TRACKS = [
     title: 'Rain in the Forest',
     artist: 'Nature Sounds',
     duration: '∞',
-    emoji: '🌧️',
+    emoji: '',
   },
   {
     id: 'ocean-waves',
     title: 'Ocean Waves',
     artist: 'Coastal Collection',
     duration: '∞',
-    emoji: '🌊',
+    emoji: '',
   },
   {
     id: 'deep-space',
     title: 'Deep Space',
     artist: 'Ambient Collective',
     duration: '45:32',
-    emoji: '🌌',
+    emoji: '',
   },
   {
     id: 'mountain-stream',
     title: 'Mountain Stream',
     artist: 'Nature Sounds',
     duration: '∞',
-    emoji: '🏔️',
+    emoji: '',
   },
 ];
 
@@ -80,7 +80,7 @@ export default function MusicScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <Text style={styles.emoji}>🎵</Text>
+            <Text style={styles.emoji}></Text>
             <Text style={styles.title}>Relaxing Music</Text>
             <Text style={styles.subtitle}>Ambient sounds for peace and focus</Text>
           </View>
@@ -121,7 +121,7 @@ export default function MusicScreen() {
               style={styles.nowPlayingGradient}
             >
               <View style={styles.nowPlayingInfo}>
-                <Text style={styles.nowPlayingEmoji}>🌧️</Text>
+                <Text style={styles.nowPlayingEmoji}></Text>
                 <View style={styles.nowPlayingDetails}>
                   <Text style={styles.nowPlayingTitle}>Rain in the Forest</Text>
                   <Text style={styles.nowPlayingArtist}>Nature Sounds</Text>
@@ -129,13 +129,13 @@ export default function MusicScreen() {
               </View>
               <View style={styles.nowPlayingControls}>
                 <TouchableOpacity style={styles.controlButton}>
-                  <Text style={styles.controlText}>⏮️</Text>
+                  <Text style={styles.controlText}></Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.playMainButton}>
-                  <Text style={styles.playMainText}>⏸️</Text>
+                  <Text style={styles.playMainText}></Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.controlButton}>
-                  <Text style={styles.controlText}>⏭️</Text>
+                  <Text style={styles.controlText}></Text>
                 </TouchableOpacity>
               </View>
             </LinearGradient>
@@ -157,7 +157,7 @@ export default function MusicScreen() {
                   <View style={styles.trackActions}>
                     <Text style={styles.trackDuration}>{track.duration}</Text>
                     <TouchableOpacity style={styles.trackPlayButton}>
-                      <Text style={styles.trackPlayText}>▶</Text>
+                      <Text style={styles.trackPlayText}></Text>
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
@@ -180,19 +180,19 @@ export default function MusicScreen() {
             <Text style={styles.sectionTitle}>Music Tips</Text>
             <View style={styles.tipsList}>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Use ambient music for background focus</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Try nature sounds for stress relief</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Instrumental music aids deep concentration</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Set a sleep timer for bedtime listening</Text>
               </View>
             </View>

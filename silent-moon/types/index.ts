@@ -41,7 +41,6 @@ export interface ActiveSession {
 
 export type SessionCategory =
   | 'focus'
-  | 'happiness'
   | 'sleep'
   | 'anxiety'
   | 'stress'
@@ -105,8 +104,7 @@ export interface SleepTimer {
 // Navigation Types
 export type RootStackParamList = {
   '(tabs)': undefined;
-  'auth/sign-in': undefined;
-  'auth/sign-up': undefined;
+  'auth/auth': undefined;
   'onboarding/welcome': undefined;
   'onboarding/topics': undefined;
   'onboarding/time-preferences': undefined;

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { User, AuthState, getCurrentUser, saveCurrentUser, logoutUser, loginUser, registerUser, updateUserPreferences } from '../utils/auth';
 
 interface UserPreferences {
   selectedTopics: string[];
@@ -26,6 +27,8 @@ interface AppState {
     date: Date;
     duration: number;
   }>;
+  // Authentication state
+  auth: AuthState;
 }
 
 type AppAction =
@@ -36,7 +39,12 @@ type AppAction =
   | { type: 'ADD_FAVORITE'; payload: string }
   | { type: 'REMOVE_FAVORITE'; payload: string }
   | { type: 'ADD_RECENT_SESSION'; payload: { id: string; title: string; duration: number } }
-  | { type: 'LOAD_STATE'; payload: AppState };
+  | { type: 'LOAD_STATE'; payload: AppState }
+  // Authentication actions
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'LOGIN_SUCCESS'; payload: User }
+  | { type: 'LOGOUT' }
+  | { type: 'UPDATE_USER_PREFERENCES'; payload: Partial<UserPreferences> };
 
 const initialState: AppState = {
   userPreferences: {
@@ -51,6 +59,11 @@ const initialState: AppState = {
   currentSession: null,
   favoriteSessions: [],
   recentSessions: [],
+  auth: {
+    isAuthenticated: false,
+    currentUser: null,
+    isLoading: false,
+  },
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -119,6 +132,50 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case 'LOAD_STATE':
       return action.payload;
 
+    // Authentication cases
+    case 'SET_LOADING':
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          isLoading: action.payload,
+        },
+      };
+
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        auth: {
+          isAuthenticated: true,
+          currentUser: action.payload,
+          isLoading: false,
+        },
+        userPreferences: action.payload.preferences || state.userPreferences,
+        isOnboarded: true, // Assuming logged-in users have completed onboarding
+      };
+
+    case 'LOGOUT':
+      return {
+        ...state,
+        auth: {
+          isAuthenticated: false,
+          currentUser: null,
+          isLoading: false,
+        },
+        // Reset to initial state on logout
+        userPreferences: initialState.userPreferences,
+        isOnboarded: false,
+        currentSession: null,
+        favoriteSessions: [],
+        recentSessions: [],
+      };
+
+    case 'UPDATE_USER_PREFERENCES':
+      return {
+        ...state,
+        userPreferences: { ...state.userPreferences, ...action.payload },
+      };
+
     default:
       return state;
   }
@@ -129,6 +186,11 @@ interface AppContextType {
   dispatch: React.Dispatch<AppAction>;
   saveState: () => Promise<void>;
   loadState: () => Promise<void>;
+  // Authentication methods
+  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, username: string, password: string, email?: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  updateUserPrefs: (preferences: Partial<UserPreferences>) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -187,8 +249,105 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
+  // Authentication methods
+  const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+
+    try {
+      const result = await loginUser(username, password);
+
+      if (result.success && result.user) {
+        await saveCurrentUser(result.user);
+        dispatch({ type: 'LOGIN_SUCCESS', payload: result.user });
+        return { success: true };
+      } else {
+        dispatch({ type: 'SET_LOADING', payload: false });
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      dispatch({ type: 'SET_LOADING', payload: false });
+      return { success: false, error: 'Login failed' };
+    }
+  };
+
+  const register = async (name: string, username: string, password: string, email?: string): Promise<{ success: boolean; error?: string }> => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+
+    try {
+      const result = await registerUser(name, username, password, email);
+
+      if (result.success && result.user) {
+        await saveCurrentUser(result.user);
+        dispatch({ type: 'LOGIN_SUCCESS', payload: result.user });
+        return { success: true };
+      } else {
+        dispatch({ type: 'SET_LOADING', payload: false });
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      dispatch({ type: 'SET_LOADING', payload: false });
+      return { success: false, error: 'Registration failed' };
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    try {
+      await logoutUser();
+      dispatch({ type: 'LOGOUT' });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
+  const updateUserPrefs = async (preferences: Partial<UserPreferences>): Promise<{ success: boolean; error?: string }> => {
+    if (!state.auth.currentUser) {
+      return { success: false, error: 'No user logged in' };
+    }
+
+    try {
+      const result = await updateUserPreferences(state.auth.currentUser.id, preferences);
+
+      if (result.success) {
+        dispatch({ type: 'UPDATE_USER_PREFERENCES', payload: preferences });
+        // Update current user in storage with proper type safety
+        const updatedUser = {
+          ...state.auth.currentUser,
+          preferences: {
+            selectedTopics: preferences.selectedTopics ?? state.auth.currentUser.preferences?.selectedTopics ?? [],
+            preferredTime: preferences.preferredTime ?? state.auth.currentUser.preferences?.preferredTime ?? '',
+            preferredDays: preferences.preferredDays ?? state.auth.currentUser.preferences?.preferredDays ?? [],
+            completedSessions: preferences.completedSessions ?? state.auth.currentUser.preferences?.completedSessions ?? 0,
+            totalMeditationTime: preferences.totalMeditationTime ?? state.auth.currentUser.preferences?.totalMeditationTime ?? 0,
+            streakCount: preferences.streakCount ?? state.auth.currentUser.preferences?.streakCount ?? 0,
+          }
+        };
+        await saveCurrentUser(updatedUser);
+      }
+
+      return result;
+    } catch (error) {
+      return { success: false, error: 'Failed to update preferences' };
+    }
+  };
+
+  // Load user session on app start
+  const initializeAuth = async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      if (currentUser) {
+        dispatch({ type: 'LOGIN_SUCCESS', payload: currentUser });
+      }
+    } catch (error) {
+      console.error('Error initializing auth:', error);
+    }
+  };
+
   useEffect(() => {
-    loadState();
+    const initialize = async () => {
+      await loadState();
+      await initializeAuth();
+    };
+    initialize();
   }, []);
 
   // Auto-save state changes
@@ -197,7 +356,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, [state]);
 
   return (
-    <AppContext.Provider value={{ state, dispatch, saveState, loadState }}>
+    <AppContext.Provider value={{
+      state,
+      dispatch,
+      saveState,
+      loadState,
+      login,
+      register,
+      logout,
+      updateUserPrefs
+    }}>
       {children}
     </AppContext.Provider>
   );
