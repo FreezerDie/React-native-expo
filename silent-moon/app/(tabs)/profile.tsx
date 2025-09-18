@@ -6,51 +6,61 @@ import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useApp } from '../../contexts/AppContext';
+// @ts-ignore
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 const { width } = Dimensions.get('window');
 
-const PROFILE_OPTIONS = [
+type ProfileOption = {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  gradient: readonly [string, string];
+};
+
+const PROFILE_OPTIONS: ProfileOption[] = [
   {
     id: 'theme-toggle',
     title: 'Theme Settings',
     description: 'Switch between light and dark mode',
-    icon: '',
-    gradient: ['#8B5CF6', '#A855F7'] as const,
+    icon: 'settings',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
   {
     id: 'personal-info',
     title: 'Personal Information',
     description: 'Update your profile details',
-    icon: '',
-    gradient: ['#667EEA', '#764BA2'] as const,
+    icon: 'user',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
   {
     id: 'preferences',
     title: 'Preferences',
     description: 'Customize your experience',
-    icon: '',
-    gradient: ['#F093FB', '#F5576C'] as const,
+    icon: 'wrench',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
   {
     id: 'statistics',
     title: 'Statistics',
     description: 'View your meditation stats',
-    icon: '',
-    gradient: ['#4ECDC4', '#44A08D'] as const,
+    icon: 'chart',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
   {
     id: 'achievements',
     title: 'Achievements',
     description: 'Your meditation milestones',
-    icon: '',
-    gradient: ['#FFD93D', '#FFB347'] as const,
+    icon: 'trophy',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
   {
     id: 'logout',
     title: 'Logout',
     description: 'Sign out of your account',
-    icon: '',
-    gradient: ['#FF6B6B', '#EE5A52'] as const,
+    icon: 'logout',
+    gradient: ['#F9FAFB', '#F3F4F6'] as const,
   },
 ];
 
@@ -159,78 +169,89 @@ export default function ProfileScreen() {
       marginTop: 0,
       borderRadius: 16,
       overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
     },
-    profileGradient: {
+    profileWidget: {
+      backgroundColor: backgroundColor,
+      borderWidth: 1,
+      borderColor: textMutedColor,
       flexDirection: 'row',
       alignItems: 'center',
       padding: 20,
+      borderRadius: 16,
     },
     avatarContainer: {
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      backgroundColor: textSecondaryColor,
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: 16,
     },
-    avatarEmoji: {
-      fontSize: 28,
+    avatarInitial: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: backgroundColor,
     },
     profileInfo: {
       flex: 1,
     },
     profileName: {
       fontSize: 20,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
+      fontWeight: '600',
+      color: textColor,
       marginBottom: 4,
     },
     profileEmail: {
       fontSize: 14,
-      color: 'rgba(255, 255, 255, 0.8)',
+      color: textMutedColor,
+      fontWeight: '400',
     },
     optionsContainer: {
       padding: 20,
       paddingTop: 0,
     },
     optionCard: {
-      marginBottom: 16,
-      borderRadius: 12,
+      marginBottom: 12,
+      borderRadius: 16,
       overflow: 'hidden',
     },
     optionGradient: {
-      borderRadius: 12,
+      borderRadius: 16,
     },
     optionContent: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 16,
+      padding: 20,
     },
     optionIcon: {
-      width: 48,
-      height: 48,
-      borderRadius: 24,
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      width: 24,
+      height: 24,
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: 16,
-    },
-    optionIconText: {
-      fontSize: 24,
+      marginRight: 18,
     },
     optionTextContainer: {
       flex: 1,
     },
     optionTitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
-      marginBottom: 4,
+      fontSize: 16,
+      fontWeight: '600',
+      color: textColor,
+      marginBottom: 2,
     },
     optionDescription: {
-      fontSize: 14,
-      color: 'rgba(255, 255, 255, 0.8)',
+      fontSize: 13,
+      color: textMutedColor,
+      lineHeight: 18,
     },
   });
 
@@ -243,24 +264,21 @@ export default function ProfileScreen() {
         </View>
 
         <View style={themedStyles.profileCard}>
-          <LinearGradient
-            colors={['#6C5CE7', '#A29BFE']}
-            style={themedStyles.profileGradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
+          <View style={themedStyles.profileWidget}>
             <View style={themedStyles.avatarContainer}>
-              <Text style={themedStyles.avatarEmoji}></Text>
+              <Text style={themedStyles.avatarInitial}>
+                {state.auth.currentUser ? state.auth.currentUser.name.charAt(0).toUpperCase() : 'M'}
+              </Text>
             </View>
             <View style={themedStyles.profileInfo}>
               <Text style={themedStyles.profileName}>
-                {state.auth.currentUser ? `Welcome, ${state.auth.currentUser.name}` : 'Meditation User'}
+                {state.auth.currentUser ? state.auth.currentUser.name : 'Meditation User'}
               </Text>
               <Text style={themedStyles.profileEmail}>
                 {state.auth.currentUser ? state.auth.currentUser.username : 'user@meditationapp.com'}
               </Text>
             </View>
-          </LinearGradient>
+          </View>
         </View>
 
         <View style={themedStyles.optionsContainer}>
@@ -274,7 +292,7 @@ export default function ProfileScreen() {
               >
                 <View style={themedStyles.optionContent}>
                   <View style={themedStyles.optionIcon}>
-                    <Text style={themedStyles.optionIconText}>{option.icon}</Text>
+                    <Icon name={option.icon} size={20} color={textSecondaryColor} />
                   </View>
                   <View style={themedStyles.optionTextContainer}>
                     <Text style={themedStyles.optionTitle}>{option.title}</Text>

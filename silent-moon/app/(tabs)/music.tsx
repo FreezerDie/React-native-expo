@@ -2,72 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AUDIO_CATEGORIES, POPULAR_TRACKS } from '../../data/audio';
 
-const MUSIC_CATEGORIES = [
-  {
-    id: 'nature',
-    title: 'Nature Sounds',
-    description: 'Forest, rain, ocean waves',
-    emoji: '',
-    gradient: ['#A8E6CF', '#52B788'],
-    tracks: 25,
-  },
-  {
-    id: 'ambient',
-    title: 'Ambient',
-    description: 'Calming electronic tones',
-    emoji: '',
-    gradient: ['#667EEA', '#764BA2'],
-    tracks: 18,
-  },
-  {
-    id: 'instrumental',
-    title: 'Instrumental',
-    description: 'Piano, guitar, strings',
-    emoji: '',
-    gradient: ['#F093FB', '#F5576C'],
-    tracks: 32,
-  },
-  {
-    id: 'meditation-bells',
-    title: 'Meditation Bells',
-    description: 'Tibetan bowls and chimes',
-    emoji: '',
-    gradient: ['#4ECDC4', '#44A08D'],
-    tracks: 15,
-  },
-];
-
-const POPULAR_TRACKS = [
-  {
-    id: 'rain-forest',
-    title: 'Rain in the Forest',
-    artist: 'Nature Sounds',
-    duration: '∞',
-    emoji: '',
-  },
-  {
-    id: 'ocean-waves',
-    title: 'Ocean Waves',
-    artist: 'Coastal Collection',
-    duration: '∞',
-    emoji: '',
-  },
-  {
-    id: 'deep-space',
-    title: 'Deep Space',
-    artist: 'Ambient Collective',
-    duration: '45:32',
-    emoji: '',
-  },
-  {
-    id: 'mountain-stream',
-    title: 'Mountain Stream',
-    artist: 'Nature Sounds',
-    duration: '∞',
-    emoji: '',
-  },
-];
 
 export default function MusicScreen() {
   const [selectedCategory, setSelectedCategory] = useState('nature');
@@ -92,7 +28,7 @@ export default function MusicScreen() {
               showsHorizontalScrollIndicator={false}
               style={styles.categoriesScroll}
             >
-              {MUSIC_CATEGORIES.map((category) => (
+              {AUDIO_CATEGORIES.map((category) => (
                 <TouchableOpacity
                   key={category.id}
                   style={[
@@ -102,7 +38,7 @@ export default function MusicScreen() {
                   onPress={() => setSelectedCategory(category.id)}
                 >
                   <LinearGradient
-                    colors={category.gradient}
+                    colors={category.gradient as [string, string]}
                     style={styles.categoryGradient}
                   >
                     <Text style={styles.categoryEmoji}>{category.emoji}</Text>
