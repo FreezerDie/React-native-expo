@@ -1,0 +1,13 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+
+React native App  for meditations
+
+
+use local storage to store data , this app will not use  Api endpoints.
+
+i am using PowerShell < V7 so  "&&"  not recognized as  (and) command
