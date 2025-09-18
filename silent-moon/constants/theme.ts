@@ -16,7 +16,6 @@ export const MeditationColors = {
   calm: '#E0E7FF',
   serenity: '#F3F4F6',
   focus: '#FF6B6B',
-  happiness: '#FFD93D',
   sleep: '#6C5CE7',
   nature: '#A8E6CF',
 };
@@ -24,7 +23,7 @@ export const MeditationColors = {
 export const Colors = {
   light: {
     text: '#1F2937',
-    background: '#FFFFFF',
+    background: '#E5E5E5',
     tint: tintColorLight,
     icon: '#6B7280',
     tabIconDefault: '#9CA3AF',
@@ -32,10 +31,12 @@ export const Colors = {
     card: '#F9FAFB',
     border: '#E5E7EB',
     muted: '#9CA3AF',
+    textSecondary: '#4B5563',
+    textMuted: '#6B7280',
   },
   dark: {
     text: '#F9FAFB',
-    background: '#111827',
+    background: '#03174D',
     tint: tintColorDark,
     icon: '#D1D5DB',
     tabIconDefault: '#6B7280',
@@ -43,6 +44,8 @@ export const Colors = {
     card: '#1F2937',
     border: '#374151',
     muted: '#6B7280',
+    textSecondary: '#D1D5DB',
+    textMuted: '#9CA3AF',
   },
 };
 
@@ -50,7 +53,6 @@ export const Colors = {
 export const Gradients = {
   primary: ['#8B5CF6', '#A855F7', '#C084FC'],
   focus: ['#FF6B6B', '#EE5A52', '#FF8A80'],
-  happiness: ['#FFD93D', '#FFB347', '#FFE066'],
   sleep: ['#6C5CE7', '#A29BFE', '#D2CEFF'],
   nature: ['#A8E6CF', '#52B788', '#B8E6D1'],
   ocean: ['#667EEA', '#764BA2', '#9B7EDE'],

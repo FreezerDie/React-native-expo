@@ -1,56 +1,39 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useApp } from '../../contexts/AppContext';
 
 export default function WelcomeScreen() {
+  const { state } = useApp();
+  const userName = state.auth.currentUser?.name || 'User';
+
   const handleGetStarted = () => {
     router.push('/onboarding/topics');
   };
 
   return (
-    <LinearGradient
-      colors={['#8B5CF6', '#A855F7', '#C084FC']}
+    <ImageBackground
+      source={require('../../assets/images/oboardingbg.png')}
       style={styles.container}
+      resizeMode="cover"
     >
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.emoji}>🧘‍♀️</Text>
             <Text style={styles.title}>
-              Welcome to Silent Moon
+              Hi {userName}, Welcome{'\n'}to Silent Moon
             </Text>
             <Text style={styles.subtitle}>
-              Your journey to inner peace begins here. Let&apos;s personalize your experience to help you achieve your mindfulness goals.
+              Explore the app, Find some peace of mind to prepare for meditation.
             </Text>
           </View>
-
-          <View style={styles.features}>
-            <View style={styles.feature}>
-              <Text style={styles.featureEmoji}>🌅</Text>
-              <Text style={styles.featureText}>Daily Meditation</Text>
-            </View>
-            <View style={styles.feature}>
-              <Text style={styles.featureEmoji}>🌙</Text>
-              <Text style={styles.featureText}>Sleep Stories</Text>
-            </View>
-            <View style={styles.feature}>
-              <Text style={styles.featureEmoji}>🎵</Text>
-              <Text style={styles.featureText}>Relaxing Music</Text>
-            </View>
-            <View style={styles.feature}>
-              <Text style={styles.featureEmoji}>📈</Text>
-              <Text style={styles.featureText}>Progress Tracking</Text>
-            </View>
-          </View>
-
           <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
             <Text style={styles.buttonText}>Get Started</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
@@ -64,11 +47,11 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 60,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 48,
   },
   emoji: {
     fontSize: 64,
@@ -111,7 +94,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: 25,
     paddingVertical: 18,
     paddingHorizontal: 24,
     alignItems: 'center',

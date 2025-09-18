@@ -14,7 +14,7 @@ const FOCUS_SESSIONS = [
     title: 'Morning Focus',
     duration: '15 min',
     description: 'Start your day with clarity and purpose',
-    emoji: '🌅',
+    emoji: '',
     gradient: ['#FF6B6B', '#EE5A52'] as const,
   },
   {
@@ -22,7 +22,7 @@ const FOCUS_SESSIONS = [
     title: 'Deep Work',
     duration: '25 min',
     description: 'Enter flow state for intensive work',
-    emoji: '🧠',
+    emoji: '',
     gradient: ['#4ECDC4', '#44A08D'] as const,
   },
   {
@@ -30,7 +30,7 @@ const FOCUS_SESSIONS = [
     title: 'Study Session',
     duration: '20 min',
     description: 'Enhanced concentration for learning',
-    emoji: '📚',
+    emoji: '',
     gradient: ['#45B7D1', '#96CEB4'] as const,
   },
   {
@@ -38,7 +38,7 @@ const FOCUS_SESSIONS = [
     title: 'Creative Focus',
     duration: '18 min',
     description: 'Unlock your creative potential',
-    emoji: '🎨',
+    emoji: '',
     gradient: ['#FDCB6E', '#E17055'] as const,
   },
   {
@@ -46,7 +46,7 @@ const FOCUS_SESSIONS = [
     title: 'Evening Wind Down',
     duration: '10 min',
     description: 'Transition from work to relaxation',
-    emoji: '🌆',
+    emoji: '',
     gradient: ['#A29BFE', '#6C5CE7'] as const,
   },
   {
@@ -54,7 +54,7 @@ const FOCUS_SESSIONS = [
     title: 'Quick Focus',
     duration: '5 min',
     description: 'Rapid attention reset',
-    emoji: '⚡',
+    emoji: '',
     gradient: ['#FD79A8', '#E84393'] as const,
   },
 ];
@@ -98,7 +98,7 @@ export default function FocusScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <Text style={styles.emoji}>🎯</Text>
+            <Text style={styles.emoji}></Text>
             <Text style={styles.title}>Focus Sessions</Text>
             <Text style={styles.subtitle}>Sharpen your mind and boost productivity</Text>
           </View>
@@ -135,7 +135,7 @@ export default function FocusScreen() {
                       style={styles.playButton}
                       onPress={() => startMeditationSession(session.title, parseInt(session.duration))}
                     >
-                      <Text style={styles.playButtonText}>▶ Start</Text>
+                      <Text style={styles.playButtonText}>Start</Text>
                     </TouchableOpacity>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -147,19 +147,19 @@ export default function FocusScreen() {
             <Text style={styles.sectionTitle}>Focus Tips</Text>
             <View style={styles.tipsList}>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Find a quiet space free from distractions</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Set a clear intention for your session</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Take deep breaths to center your mind</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>If your mind wanders, gently bring it back</Text>
               </View>
             </View>

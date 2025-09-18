@@ -11,7 +11,7 @@ const SLEEP_STORIES = [
     title: 'Ocean Dreams',
     duration: '25 min',
     description: 'Drift away on gentle waves',
-    emoji: '🌊',
+    emoji: '',
     gradient: ['#667EEA', '#764BA2'],
   },
   {
@@ -19,7 +19,7 @@ const SLEEP_STORIES = [
     title: 'Mountain Retreat',
     duration: '30 min',
     description: 'Peaceful alpine journey',
-    emoji: '🏔️',
+    emoji: '',
     gradient: ['#F093FB', '#F5576C'],
   },
   {
@@ -27,7 +27,7 @@ const SLEEP_STORIES = [
     title: 'Forest Whispers',
     duration: '20 min',
     description: 'Secrets of the ancient woods',
-    emoji: '🌲',
+    emoji: '',
     gradient: ['#4ECDC4', '#44A08D'],
   },
   {
@@ -35,7 +35,7 @@ const SLEEP_STORIES = [
     title: 'Starlight Stories',
     duration: '22 min',
     description: 'Tales from the night sky',
-    emoji: '⭐',
+    emoji: '',
     gradient: ['#A8E6CF', '#52B788'],
   },
 ];
@@ -44,25 +44,25 @@ const SLEEP_SOUNDS = [
   {
     id: 'rain',
     title: 'Gentle Rain',
-    emoji: '🌧️',
+    emoji: '',
     gradient: ['#667EEA', '#764BA2'],
   },
   {
     id: 'waves',
     title: 'Ocean Waves',
-    emoji: '🌊',
+    emoji: '',
     gradient: ['#F093FB', '#F5576C'],
   },
   {
     id: 'wind',
     title: 'Soft Wind',
-    emoji: '🍃',
+    emoji: '',
     gradient: ['#4ECDC4', '#44A08D'],
   },
   {
     id: 'white-noise',
     title: 'White Noise',
-    emoji: '📻',
+    emoji: '',
     gradient: ['#A8E6CF', '#52B788'],
   },
 ];
@@ -76,7 +76,7 @@ export default function SleepScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <Text style={styles.emoji}>🌙</Text>
+            <Text style={styles.emoji}></Text>
             <Text style={styles.title}>Sleep & Relaxation</Text>
             <Text style={styles.subtitle}>Drift into peaceful slumber</Text>
           </View>
@@ -86,7 +86,7 @@ export default function SleepScreen() {
               colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
               style={styles.timerGradient}
             >
-              <Text style={styles.timerEmoji}>⏰</Text>
+              <Text style={styles.timerEmoji}></Text>
               <Text style={styles.timerTitle}>Sleep Timer</Text>
               <Text style={styles.timerSubtitle}>Automatically stop playback</Text>
               <View style={styles.timerOptions}>
@@ -113,7 +113,7 @@ export default function SleepScreen() {
                     <Text style={styles.storyDuration}>{story.duration}</Text>
                     <Text style={styles.storyDescription}>{story.description}</Text>
                     <TouchableOpacity style={styles.playButton}>
-                      <Text style={styles.playButtonText}>▶ Play</Text>
+                      <Text style={styles.playButtonText}>Play</Text>
                     </TouchableOpacity>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -133,7 +133,7 @@ export default function SleepScreen() {
                     <Text style={styles.soundEmoji}>{sound.emoji}</Text>
                     <Text style={styles.soundTitle}>{sound.title}</Text>
                     <TouchableOpacity style={styles.soundPlayButton}>
-                      <Text style={styles.soundPlayButtonText}>▶</Text>
+                      <Text style={styles.soundPlayButtonText}></Text>
                     </TouchableOpacity>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -145,19 +145,19 @@ export default function SleepScreen() {
             <Text style={styles.sectionTitle}>Sleep Tips</Text>
             <View style={styles.tipsList}>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Create a consistent bedtime routine</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Keep your bedroom cool and dark</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Avoid screens at least 1 hour before bed</Text>
               </View>
               <View style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipBullet}></Text>
                 <Text style={styles.tipText}>Try deep breathing exercises to relax</Text>
               </View>
             </View>
