@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -69,9 +68,8 @@ const SLEEP_SOUNDS = [
 
 export default function SleepScreen() {
   return (
-    <LinearGradient
-      colors={['#6C5CE7', '#A29BFE']}
-      style={styles.container}
+    <View
+      style={[styles.container, { backgroundColor: '#6C5CE7' }]}
     >
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -82,9 +80,8 @@ export default function SleepScreen() {
           </View>
 
           <View style={styles.sleepTimer}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
-              style={styles.timerGradient}
+            <View
+              style={[styles.timerGradient, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}
             >
               <Text style={styles.timerEmoji}></Text>
               <Text style={styles.timerTitle}>Sleep Timer</Text>
@@ -96,7 +93,7 @@ export default function SleepScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
-            </LinearGradient>
+            </View>
           </View>
 
           <View style={styles.section}>
@@ -104,9 +101,8 @@ export default function SleepScreen() {
             <View style={styles.storiesGrid}>
               {SLEEP_STORIES.map((story) => (
                 <TouchableOpacity key={story.id} style={styles.storyCard}>
-                  <LinearGradient
-                    colors={story.gradient}
-                    style={styles.storyGradient}
+                  <View
+                    style={[styles.storyGradient, { backgroundColor: story.gradient[0] }]}
                   >
                     <Text style={styles.storyEmoji}>{story.emoji}</Text>
                     <Text style={styles.storyTitle}>{story.title}</Text>
@@ -115,7 +111,7 @@ export default function SleepScreen() {
                     <TouchableOpacity style={styles.playButton}>
                       <Text style={styles.playButtonText}>Play</Text>
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -126,16 +122,15 @@ export default function SleepScreen() {
             <View style={styles.soundsGrid}>
               {SLEEP_SOUNDS.map((sound) => (
                 <TouchableOpacity key={sound.id} style={styles.soundCard}>
-                  <LinearGradient
-                    colors={sound.gradient}
-                    style={styles.soundGradient}
+                  <View
+                    style={[styles.soundGradient, { backgroundColor: sound.gradient[0] }]}
                   >
                     <Text style={styles.soundEmoji}>{sound.emoji}</Text>
                     <Text style={styles.soundTitle}>{sound.title}</Text>
                     <TouchableOpacity style={styles.soundPlayButton}>
                       <Text style={styles.soundPlayButtonText}></Text>
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -164,7 +159,7 @@ export default function SleepScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 

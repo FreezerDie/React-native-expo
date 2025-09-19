@@ -14,10 +14,17 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
       <NavigationGuard>
-        <Stack>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="landing" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/sign-in" options={{ headerShown: false }} />
           <Stack.Screen name="auth/auth" options={{ headerShown: false }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding/welcome" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding/topics" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding/time-preferences" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="course-detail" options={{ headerShown: false }} />
           <Stack.Screen name="player" options={{ headerShown: false, presentation: 'modal' }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>

@@ -20,8 +20,10 @@ export default function NavigationGuard({ children }: NavigationGuardProps) {
     const inAuthGroup = segments[0] === 'auth';
     const inOnboardingGroup = segments[0] === 'onboarding';
     const inTabsGroup = segments[0] === '(tabs)';
+    const inCourseDetail = segments[0] === 'course-detail';
+    const inPlayer = segments[0] === 'player';
 
-    console.log('NavigationGuard - inAuthGroup:', inAuthGroup, 'inOnboardingGroup:', inOnboardingGroup, 'inTabsGroup:', inTabsGroup);
+    console.log('NavigationGuard - inAuthGroup:', inAuthGroup, 'inOnboardingGroup:', inOnboardingGroup, 'inTabsGroup:', inTabsGroup, 'inCourseDetail:', inCourseDetail, 'inPlayer:', inPlayer);
 
     // Don't redirect while authentication is in progress
     if (state.auth.isLoading) {
@@ -44,6 +46,13 @@ export default function NavigationGuard({ children }: NavigationGuardProps) {
       return;
     }
 
+    // If user is not authenticated, redirect to landing page
+    if (!state.auth.isAuthenticated && !inAuthGroup) {
+      console.log('NavigationGuard - Redirecting unauthenticated user to landing page');
+      setTimeout(() => router.replace('/landing'), 100);
+      return;
+    }
+
     // If user is not onboarded and not in auth/onboarding flow, redirect to welcome
     if (!state.isOnboarded && !inAuthGroup && !inOnboardingGroup && !inTabsGroup) {
       console.log('NavigationGuard - Redirecting non-onboarded user to welcome');
@@ -59,7 +68,8 @@ export default function NavigationGuard({ children }: NavigationGuardProps) {
     }
 
     // If user is authenticated and onboarded but on some other screen, go to tabs
-    if (state.auth.isAuthenticated && state.isOnboarded && !inAuthGroup && !inOnboardingGroup && !inTabsGroup) {
+    // (excluding course-detail and player which are allowed)
+    if (state.auth.isAuthenticated && state.isOnboarded && !inAuthGroup && !inOnboardingGroup && !inTabsGroup && !inCourseDetail && !inPlayer) {
       console.log('NavigationGuard - Redirecting authenticated onboarded user to tabs');
       setTimeout(() => router.replace('/(tabs)'), 100);
     }

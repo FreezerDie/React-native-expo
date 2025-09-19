@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -284,11 +283,8 @@ export default function ProfileScreen() {
         <View style={themedStyles.optionsContainer}>
           {PROFILE_OPTIONS.map((option) => (
             <TouchableOpacity key={option.id} style={themedStyles.optionCard} onPress={() => handleOptionPress(option.id)}>
-              <LinearGradient
-                colors={option.gradient}
-                style={themedStyles.optionGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+              <View
+                style={[themedStyles.optionGradient, { backgroundColor: option.gradient[0] }]}
               >
                 <View style={themedStyles.optionContent}>
                   <View style={themedStyles.optionIcon}>
@@ -299,7 +295,7 @@ export default function ProfileScreen() {
                     <Text style={themedStyles.optionDescription}>{option.description}</Text>
                   </View>
                 </View>
-              </LinearGradient>
+              </View>
             </TouchableOpacity>
           ))}
         </View>

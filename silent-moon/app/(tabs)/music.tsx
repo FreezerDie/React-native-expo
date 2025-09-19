@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { AUDIO_CATEGORIES, POPULAR_TRACKS } from '../../data/audio';
 
 
@@ -9,9 +8,8 @@ export default function MusicScreen() {
   const [selectedCategory, setSelectedCategory] = useState('nature');
 
   return (
-    <LinearGradient
-      colors={['#A8E6CF', '#52B788']}
-      style={styles.container}
+    <View
+      style={[styles.container, { backgroundColor: '#A8E6CF' }]}
     >
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -37,24 +35,23 @@ export default function MusicScreen() {
                   ]}
                   onPress={() => setSelectedCategory(category.id)}
                 >
-                  <LinearGradient
-                    colors={category.gradient as [string, string]}
-                    style={styles.categoryGradient}
+                  <View
+                    style={[styles.categoryGradient, { backgroundColor: category.gradient[0] }]}
                   >
-                    <Text style={styles.categoryEmoji}>{category.emoji}</Text>
                     <Text style={styles.categoryTitle}>{category.title}</Text>
-                    <Text style={styles.categoryDescription}>{category.description}</Text>
                     <Text style={styles.categoryTracks}>{category.tracks} tracks</Text>
-                  </LinearGradient>
+                    <TouchableOpacity style={styles.categoryPlayButton}>
+                      <Text style={styles.categoryPlayButtonText}>Play</Text>
+                    </TouchableOpacity>
+                  </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
 
           <View style={styles.nowPlaying}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
-              style={styles.nowPlayingGradient}
+            <View
+              style={[styles.nowPlayingGradient, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}
             >
               <View style={styles.nowPlayingInfo}>
                 <Text style={styles.nowPlayingEmoji}></Text>
@@ -74,7 +71,7 @@ export default function MusicScreen() {
                   <Text style={styles.controlText}></Text>
                 </TouchableOpacity>
               </View>
-            </LinearGradient>
+            </View>
           </View>
 
           <View style={styles.popularSection}>
@@ -135,7 +132,7 @@ export default function MusicScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -200,7 +197,7 @@ const styles = StyleSheet.create({
   categoryGradient: {
     flex: 1,
     padding: 16,
-    justifyContent: 'space-between',
+    position: 'relative',
   },
   categoryEmoji: {
     fontSize: 24,
@@ -210,7 +207,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 4,
+    textAlign: 'left',
+    position: 'absolute',
+    left: 16,
+    top: '50%',
+    transform: [{ translateY: -10 }],
   },
   categoryDescription: {
     fontSize: 11,
@@ -221,6 +222,26 @@ const styles = StyleSheet.create({
   categoryTracks: {
     fontSize: 10,
     color: 'rgba(255, 255, 255, 0.7)',
+    textAlign: 'left',
+    position: 'absolute',
+    left: 16,
+    bottom: 16,
+  },
+  categoryPlayButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  categoryPlayButtonText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
   },
   nowPlaying: {
     marginHorizontal: 24,

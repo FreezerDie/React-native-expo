@@ -15,7 +15,6 @@ export interface Topic {
   description: string;
   type: TopicType;
   height: number;
-  category: string;
   added_to_favorites_count: number;
   listening_count: number;
 }
@@ -31,7 +30,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Practice present moment awareness',
     type: 'meditation' as TopicType,
     height: 140,
-    category: 'Meditation',
     added_to_favorites_count: 1247,
     listening_count: 8956
   },
@@ -43,7 +41,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Find calm in the chaos of daily life',
     type: 'meditation' as TopicType,
     height: 150,
-    category: 'Meditation',
     added_to_favorites_count: 2156,
     listening_count: 15432
   },
@@ -55,7 +52,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Manage worry and find inner peace',
     type: 'anxiety' as TopicType,
     height: 130,
-    category: 'Meditation',
     added_to_favorites_count: 1893,
     listening_count: 12345
   },
@@ -69,7 +65,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Ancient healing frequencies for deep meditation',
     type: 'music_meditation' as TopicType,
     height: 160,
-    category: 'Music Meditation',
     added_to_favorites_count: 3421,
     listening_count: 28756
   },
@@ -81,7 +76,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Brainwave entrainment for focus and relaxation',
     type: 'music_meditation' as TopicType,
     height: 145,
-    category: 'Music Meditation',
     added_to_favorites_count: 4567,
     listening_count: 32145
   },
@@ -93,7 +87,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Harmonize your energy centers with sound',
     type: 'music_meditation' as TopicType,
     height: 155,
-    category: 'Music Meditation',
     added_to_favorites_count: 2987,
     listening_count: 19876
   },
@@ -107,7 +100,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Soothing nature sounds for deep relaxation',
     type: 'music_relaxation' as TopicType,
     height: 135,
-    category: 'Music Relaxation',
     added_to_favorites_count: 5234,
     listening_count: 45678
   },
@@ -119,7 +111,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Gentle piano melodies for peaceful moments',
     type: 'music_relaxation' as TopicType,
     height: 165,
-    category: 'Music Relaxation',
     added_to_favorites_count: 6789,
     listening_count: 54321
   },
@@ -131,7 +122,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Chill beats perfect for background listening',
     type: 'music_relaxation' as TopicType,
     height: 140,
-    category: 'Music Relaxation',
     added_to_favorites_count: 7891,
     listening_count: 67890
   },
@@ -143,7 +133,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Timeless classical pieces for serenity',
     type: 'music_relaxation' as TopicType,
     height: 150,
-    category: 'Music Relaxation',
     added_to_favorites_count: 3456,
     listening_count: 29876
   },
@@ -155,7 +144,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Rhythmic waves for ultimate relaxation',
     type: 'music_relaxation' as TopicType,
     height: 140,
-    category: 'Music Relaxation',
     added_to_favorites_count: 4123,
     listening_count: 36789
   },
@@ -169,7 +157,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Sharpen your focus and mental clarity',
     type: 'focus' as TopicType,
     height: 150,
-    category: 'Focus',
     added_to_favorites_count: 3876,
     listening_count: 32456
   },
@@ -181,7 +168,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Enhance performance and get things done',
     type: 'focus' as TopicType,
     height: 145,
-    category: 'Focus',
     added_to_favorites_count: 4123,
     listening_count: 35123
   },
@@ -195,7 +181,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Rest deeply and wake refreshed',
     type: 'sleep' as TopicType,
     height: 130,
-    category: 'Sleep',
     added_to_favorites_count: 5678,
     listening_count: 48901
   },
@@ -207,7 +192,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Guided narratives for peaceful slumber',
     type: 'sleep' as TopicType,
     height: 155,
-    category: 'Sleep',
     added_to_favorites_count: 4234,
     listening_count: 37654
   },
@@ -221,7 +205,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Develop deeper understanding of yourself',
     type: 'growth' as TopicType,
     height: 160,
-    category: 'Personal Growth',
     added_to_favorites_count: 2987,
     listening_count: 23456
   },
@@ -233,7 +216,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Master the art of conscious breathing',
     type: 'meditation' as TopicType,
     height: 135,
-    category: 'Meditation',
     added_to_favorites_count: 3456,
     listening_count: 27890
   },
@@ -245,7 +227,6 @@ export const TOPICS_DATA: Topic[] = [
     description: 'Build confidence with empowering thoughts',
     type: 'growth' as TopicType,
     height: 170,
-    category: 'Personal Growth',
     added_to_favorites_count: 2876,
     listening_count: 21345
   }

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import BackNavigation from '@/components/BackNavigation';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -55,6 +56,7 @@ export default function AuthScreen() {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <SafeAreaView style={styles.safeArea}>
+        <BackNavigation />
         <View style={styles.header}>
           <Text style={[styles.title, { color: textColor }]}>
             {mode === 'signin' ? 'Welcome Back!' : 'Welcome to Silent Moon'}
@@ -84,7 +86,7 @@ export default function AuthScreen() {
 
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
-            <Text style={[styles.dividerText, { color: textSecondaryColor }]}>or</Text>
+            <Text style={[styles.dividerText, { color: textSecondaryColor }]}>OR LOG IN WITH EMAIL</Text>
             <View style={styles.dividerLine} />
           </View>
 

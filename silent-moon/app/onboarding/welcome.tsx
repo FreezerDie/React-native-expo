@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useApp } from '../../contexts/AppContext';
+import { BorderRadius } from '../../constants/theme';
 
 export default function WelcomeScreen() {
   const { state } = useApp();
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 25,
+    borderRadius: BorderRadius.round,
     paddingVertical: 18,
     paddingHorizontal: 24,
     alignItems: 'center',

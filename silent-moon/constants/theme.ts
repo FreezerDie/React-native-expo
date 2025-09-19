@@ -23,7 +23,7 @@ export const MeditationColors = {
 export const Colors = {
   light: {
     text: '#1F2937',
-    background: '#E5E5E5',
+    background: '#ffffff',
     tint: tintColorLight,
     icon: '#6B7280',
     tabIconDefault: '#9CA3AF',
@@ -47,6 +47,16 @@ export const Colors = {
     textSecondary: '#D1D5DB',
     textMuted: '#9CA3AF',
   },
+};
+
+// Border radius values for consistent UI
+export const BorderRadius = {
+  small: 12,
+  medium: 22,
+  large: 24,
+  extraLarge: 30,
+  round: 35,
+  full: 50,
 };
 
 // Gradient collections for different meditation categories

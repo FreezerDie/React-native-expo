@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import { useApp } from '@/contexts/AppContext';
 
@@ -91,9 +90,8 @@ export default function FocusScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#FF6B6B', '#EE5A52']}
-      style={styles.container}
+    <View
+      style={[styles.container, { backgroundColor: '#FF6B6B' }]}
     >
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -123,21 +121,18 @@ export default function FocusScreen() {
             <View style={styles.sessionsGrid}>
               {FOCUS_SESSIONS.map((session) => (
                 <TouchableOpacity key={session.id} style={styles.sessionCard}>
-                  <LinearGradient
-                    colors={session.gradient}
-                    style={styles.sessionGradient}
+                  <View
+                    style={[styles.sessionGradient, { backgroundColor: session.gradient[0] }]}
                   >
-                    <Text style={styles.sessionEmoji}>{session.emoji}</Text>
                     <Text style={styles.sessionTitle}>{session.title}</Text>
                     <Text style={styles.sessionDuration}>{session.duration}</Text>
-                    <Text style={styles.sessionDescription}>{session.description}</Text>
                     <TouchableOpacity
                       style={styles.playButton}
                       onPress={() => startMeditationSession(session.title, parseInt(session.duration))}
                     >
                       <Text style={styles.playButtonText}>Start</Text>
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -166,7 +161,7 @@ export default function FocusScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -251,7 +246,7 @@ const styles = StyleSheet.create({
   sessionGradient: {
     flex: 1,
     padding: 16,
-    justifyContent: 'space-between',
+    position: 'relative',
   },
   sessionEmoji: {
     fontSize: 24,
@@ -261,12 +256,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 4,
+    textAlign: 'left',
+    position: 'absolute',
+    left: 16,
+    top: '50%',
+    transform: [{ translateY: -10 }],
   },
   sessionDuration: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
-    marginBottom: 8,
+    textAlign: 'left',
+    position: 'absolute',
+    left: 16,
+    bottom: 16,
   },
   sessionDescription: {
     fontSize: 12,
@@ -279,7 +281,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    alignSelf: 'flex-start',
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   playButtonText: {
     color: '#FFFFFF',
