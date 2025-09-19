@@ -5,7 +5,9 @@ import { router } from 'expo-router';
 
 import { useApp } from '@/contexts/AppContext';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { TOPICS_DATA, TopicType, getCategoryBadgeText, getCategoryBadgeStyle } from '@/data';
+import { TOPICS_DATA } from '@/data';
+import { BorderRadius } from '@/constants/theme';
+import BackNavigation from '@/components/BackNavigation';
 
 export default function TopicsScreen() {
   const { state, dispatch } = useApp();
@@ -40,9 +42,24 @@ export default function TopicsScreen() {
 
   const isSelected = (topicId: string) => selectedTopics.includes(topicId);
 
+  // Function to determine text color based on background contrast
+  const getTextColor = (bgColor: string) => {
+    // Convert hex to RGB
+    const hex = bgColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+
+    // Calculate relative luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    // Return white for dark backgrounds, black for light backgrounds
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  };
+
   // Create masonry layout with 2 columns
-  const createMasonryLayout = (): Array<Array<typeof TOPICS_DATA[0]>> => {
-    const columns: Array<Array<typeof TOPICS_DATA[0]>> = [[], []];
+  const createMasonryLayout = (): (typeof TOPICS_DATA[0])[][] => {
+    const columns: (typeof TOPICS_DATA[0])[][] = [[], []];
     const columnHeights = [0, 0];
 
     TOPICS_DATA.forEach((topic) => {
@@ -59,6 +76,7 @@ export default function TopicsScreen() {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <SafeAreaView style={styles.safeArea}>
+        <BackNavigation />
         <View style={styles.header}>
           <Text style={[styles.title, { color: textColor }]}>
             What Brings You to Silent Moon?
@@ -81,46 +99,17 @@ export default function TopicsScreen() {
                     key={topic.id}
                     style={[
                       styles.topicCard,
-                      { height: topic.height, backgroundColor: cardColor, borderColor },
+                      { height: topic.height, backgroundColor: topic.color, borderColor },
                       isSelected(topic.id) && styles.topicCardSelected,
                     ]}
                     onPress={() => toggleTopic(topic.id)}
                   >
-                    <View style={styles.topicHeader}>
-                      <Text style={styles.topicEmoji}>{topic.emoji}</Text>
-                      <View style={[
-                        styles.categoryBadge,
-                        getCategoryBadgeStyle(topic.type) === 'badgeMusicMeditation' ? styles.badgeMusicMeditation :
-                        getCategoryBadgeStyle(topic.type) === 'badgeMusicRelaxation' ? styles.badgeMusicRelaxation :
-                        styles.badgeDefault
-                      ]}>
-                        <Text style={styles.categoryBadgeText}>
-                          {getCategoryBadgeText(topic.type)}
-                        </Text>
-                      </View>
-                    </View>
                     <Text style={[
                       styles.topicTitle,
-                      { color: textColor },
-                      isSelected(topic.id) && styles.topicTitleSelected,
+                      { color: getTextColor(topic.color) },
                     ]}>
                       {topic.title}
                     </Text>
-                    <Text style={[
-                      styles.topicDescription,
-                      { color: textSecondaryColor },
-                      isSelected(topic.id) && styles.topicDescriptionSelected,
-                    ]}>
-                      {topic.description}
-                    </Text>
-                    <View style={styles.topicStats}>
-                      <Text style={[styles.topicStat, { color: textSecondaryColor }]}>
-                        {topic.added_to_favorites_count.toLocaleString()}
-                      </Text>
-                      <Text style={[styles.topicStat, { color: textSecondaryColor }]}>
-                        {topic.listening_count.toLocaleString()}
-                      </Text>
-                    </View>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -191,13 +180,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   topicCard: {
-    borderRadius: 16,
+    borderRadius: BorderRadius.large,
     padding: 16,
     marginBottom: 16,
     borderWidth: 2,
     borderColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   topicCardSelected: {
     borderColor: '#8B5CF6',
@@ -212,7 +201,7 @@ const styles = StyleSheet.create({
   categoryBadge: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: BorderRadius.medium,
     alignSelf: 'flex-start',
   },
   badgeDefault: {
@@ -229,18 +218,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#8B5CF6',
   },
-  topicStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(139, 92, 246, 0.1)',
-  },
-  topicStat: {
-    fontSize: 11,
-    fontWeight: '500',
-  },
   topicEmoji: {
     fontSize: 28,
   },
@@ -250,23 +227,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 6,
   },
-  topicTitleSelected: {
-    color: '#8B5CF6',
-  },
-  topicDescription: {
-    fontSize: 12,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-  topicDescriptionSelected: {
-    color: '#8B5CF6',
-  },
   footer: {
     paddingHorizontal: 24,
     paddingBottom: 32,
   },
   continueButton: {
-    borderRadius: 12,
+    borderRadius: BorderRadius.medium,
     paddingVertical: 16,
     alignItems: 'center',
   },

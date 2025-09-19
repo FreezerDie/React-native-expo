@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, TextInput, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useApp } from '../../contexts/AppContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { Colors, Gradients, BorderRadius } from '../../constants/theme';
 
 type AuthMode = 'signin' | 'signup';
 
 export default function AuthScreen() {
   const { login, register, state } = useApp();
+  const { theme } = useTheme();
+  const { mode: initialMode } = useLocalSearchParams<{ mode: string }>();
   const [mode, setMode] = useState<AuthMode>('signin');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+
+  useEffect(() => {
+    if (initialMode === 'signup') {
+      setMode('signup');
+    } else if (initialMode === 'signin') {
+      setMode('signin');
+    }
+  }, [initialMode]);
 
   const handleAuth = async () => {
     if (mode === 'signin') {
@@ -78,129 +89,307 @@ export default function AuthScreen() {
     setPrivacyAccepted(false);
   };
 
+  // Theme-aware background
+  const isLight = theme === 'light';
+
   return (
-    <LinearGradient
-      colors={['#8B5CF6', '#A855F7', '#C084FC']}
-      style={styles.container}
-    >
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            {mode === 'signin' ? 'Welcome Back!' : 'Create Account'}
-          </Text>
-          <Text style={styles.subtitle}>
-            {mode === 'signin'
-              ? 'Continue your mindfulness journey'
-              : 'Create your account to start your mindfulness journey'
-            }
-          </Text>
-        </View>
-
-        <View style={styles.form}>
-          <TouchableOpacity
-            style={styles.socialButton}
-            onPress={() => handleSocialLogin('Google')}
-          >
-            <Text style={styles.socialButtonText}>Continue with Google</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.socialButton}
-            onPress={() => handleSocialLogin('Facebook')}
-          >
-            <Text style={styles.socialButtonText}>Continue with Facebook</Text>
-          </TouchableOpacity>
-
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
+    <View style={[styles.container, { backgroundColor: isLight ? Colors.light.background : undefined }]}>
+      {isLight ? (
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: Colors[theme].text }]}>
+              {mode === 'signin' ? 'Welcome Back!' : 'Create Account'}
+            </Text>
+            <Text style={[styles.subtitle, { color: Colors[theme].textSecondary }]}>
+              {mode === 'signin'
+                ? 'Continue your mindfulness journey'
+                : 'Create your account to start your mindfulness journey'
+              }
+            </Text>
           </View>
 
-          {/* Form Fields */}
-          {mode === 'signup' && (
+          <View style={styles.form}>
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: '#FFFFFF' }]}
+              onPress={() => handleSocialLogin('Google')}
+            >
+              <Text style={[styles.socialButtonText, { color: '#000000' }]}>
+                Continue with Google
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: '#7583CA' }]}
+              onPress={() => handleSocialLogin('Facebook')}
+            >
+              <Text style={[styles.socialButtonText, { color: '#FFFFFF' }]}>
+                Continue with Facebook
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={[styles.dividerText, { color: Colors[theme].textMuted }]}>OR LOG IN WITH EMAIL</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            {/* Form Fields */}
+            {mode === 'signup' && (
+              <TextInput
+                style={[styles.input, {
+                  backgroundColor: Colors[theme].card,
+                  borderColor: Colors[theme].border,
+                  color: Colors[theme].text
+                }]}
+                placeholder="Full Name"
+                placeholderTextColor={Colors[theme].textMuted}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
+            )}
+
             <TextInput
-              style={styles.input}
-              placeholder="Full Name"
-              placeholderTextColor="rgba(255, 255, 255, 0.6)"
-              value={name}
-              onChangeText={setName}
-              autoCapitalize="words"
+              style={[styles.input, {
+                backgroundColor: Colors[theme].card,
+                borderColor: Colors[theme].border,
+                color: Colors[theme].text
+              }]}
+              placeholder="Username"
+              placeholderTextColor={Colors[theme].textMuted}
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-          )}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            placeholderTextColor="rgba(255, 255, 255, 0.6)"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+            <TextInput
+              style={[styles.input, {
+                backgroundColor: Colors[theme].card,
+                borderColor: Colors[theme].border,
+                color: Colors[theme].text
+              }]}
+              placeholder="Password"
+              placeholderTextColor={Colors[theme].textMuted}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="rgba(255, 255, 255, 0.6)"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+            {mode === 'signup' && (
+              <View style={styles.checkboxContainer}>
+                <TouchableOpacity
+                  style={[styles.checkbox, privacyAccepted && styles.checkboxChecked]}
+                  onPress={() => setPrivacyAccepted(!privacyAccepted)}
+                >
+                  {privacyAccepted && <Text style={styles.checkmark}>✓</Text>}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setPrivacyAccepted(!privacyAccepted)}>
+                  <Text style={[styles.checkboxText, { color: Colors[theme].textSecondary }]}>
+                    I have read and agree to the{' '}
+                    <Text style={[styles.linkText, { color: Colors[theme].tint }]}>
+                      Privacy Policy
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
-          {mode === 'signup' && (
-            <View style={styles.checkboxContainer}>
-              <TouchableOpacity
-                style={[styles.checkbox, privacyAccepted && styles.checkboxChecked]}
-                onPress={() => setPrivacyAccepted(!privacyAccepted)}
-              >
-                {privacyAccepted && <Text style={styles.checkmark}></Text>}
+            <TouchableOpacity
+              style={[
+                styles.primaryButton,
+                { backgroundColor: Colors[theme].tint },
+                state.auth.isLoading && styles.primaryButtonDisabled
+              ]}
+              onPress={handleAuth}
+              disabled={state.auth.isLoading}
+            >
+              {state.auth.isLoading ? (
+                <ActivityIndicator color={Colors.light.background} />
+              ) : (
+                <Text style={[styles.primaryButtonText, { color: Colors.light.background }]}>
+                  {mode === 'signin' ? 'Sign In' : 'Create Account'}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            {mode === 'signin' && (
+              <TouchableOpacity style={styles.forgotPassword}>
+                <Text style={[styles.forgotPasswordText, { color: Colors[theme].textMuted }]}>
+                  Forgot Password?
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setPrivacyAccepted(!privacyAccepted)}>
-                <Text style={styles.checkboxText}>
-                  I have read and agree to the{' '}
-                  <Text style={styles.linkText}>Privacy Policy</Text>
+            )}
+          </View>
+
+          <View style={styles.footer}>
+            <Text style={[styles.footerText, { color: Colors[theme].textSecondary }]}>
+              {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+            </Text>
+            <TouchableOpacity onPress={toggleMode}>
+              <Text style={[styles.linkText, { color: Colors[theme].tint }]}>
+                {mode === 'signin' ? 'Sign Up' : 'Sign In'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+        </SafeAreaView>
+      ) : (
+        <View
+          style={[styles.container, { backgroundColor: '#4ECDC4' }]}
+        >
+          <SafeAreaView style={styles.safeArea}>
+            <View style={styles.header}>
+              <Text style={[styles.title, { color: Colors[theme].text }]}>
+                {mode === 'signin' ? 'Welcome Back!' : 'Create Account'}
+              </Text>
+              <Text style={[styles.subtitle, { color: Colors[theme].textSecondary }]}>
+                {mode === 'signin'
+                  ? 'Continue your mindfulness journey'
+                  : 'Create your account to start your mindfulness journey'
+                }
+              </Text>
+            </View>
+
+            <View style={styles.form}>
+              <TouchableOpacity
+                style={[styles.socialButton, {
+                  backgroundColor: '#FFFFFF',
+                  borderColor: Colors[theme].border
+                }]}
+                onPress={() => handleSocialLogin('Google')}
+              >
+                <Text style={[styles.socialButtonText, { color: '#000000' }]}>
+                  Continue with Google
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.socialButton, {
+                  backgroundColor: '#7583CA',
+                  borderColor: Colors[theme].border
+                }]}
+                onPress={() => handleSocialLogin('Facebook')}
+              >
+                <Text style={[styles.socialButtonText, { color: '#FFFFFF' }]}>
+                  Continue with Facebook
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.divider}>
+                <View style={[styles.dividerLine, { backgroundColor: Colors[theme].border }]} />
+                <Text style={[styles.dividerText, { color: Colors[theme].textMuted }]}>or</Text>
+                <View style={[styles.dividerLine, { backgroundColor: Colors[theme].border }]} />
+              </View>
+
+              {/* Form Fields */}
+              {mode === 'signup' && (
+                <TextInput
+                  style={[styles.input, {
+                    backgroundColor: Colors[theme].card,
+                    borderColor: Colors[theme].border,
+                    color: Colors[theme].text
+                  }]}
+                  placeholder="Full Name"
+                  placeholderTextColor={Colors[theme].textMuted}
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="words"
+                />
+              )}
+
+              <TextInput
+                style={[styles.input, {
+                  backgroundColor: Colors[theme].card,
+                  borderColor: Colors[theme].border,
+                  color: Colors[theme].text
+                }]}
+                placeholder="Username"
+                placeholderTextColor={Colors[theme].textMuted}
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+
+              <TextInput
+                style={[styles.input, {
+                  backgroundColor: Colors[theme].card,
+                  borderColor: Colors[theme].border,
+                  color: Colors[theme].text
+                }]}
+                placeholder="Password"
+                placeholderTextColor={Colors[theme].textMuted}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+
+              {mode === 'signup' && (
+                <View style={styles.checkboxContainer}>
+                  <TouchableOpacity
+                    style={[styles.checkbox, privacyAccepted && styles.checkboxChecked]}
+                    onPress={() => setPrivacyAccepted(!privacyAccepted)}
+                  >
+                    {privacyAccepted && <Text style={[styles.checkmark, { color: Colors[theme].tint }]}>✓</Text>}
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setPrivacyAccepted(!privacyAccepted)}>
+                    <Text style={[styles.checkboxText, { color: Colors[theme].textSecondary }]}>
+                      I have read and agree to the{' '}
+                      <Text style={[styles.linkText, { color: Colors[theme].tint }]}>
+                        Privacy Policy
+                      </Text>
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={[
+                  styles.primaryButton,
+                  { backgroundColor: Colors[theme].tint },
+                  state.auth.isLoading && styles.primaryButtonDisabled
+                ]}
+                onPress={handleAuth}
+                disabled={state.auth.isLoading}
+              >
+                {state.auth.isLoading ? (
+                  <ActivityIndicator color={Colors.light.background} />
+                ) : (
+                  <Text style={[styles.primaryButtonText, { color: Colors.light.background }]}>
+                    {mode === 'signin' ? 'Sign In' : 'Create Account'}
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              {mode === 'signin' && (
+                <TouchableOpacity style={styles.forgotPassword}>
+                  <Text style={[styles.forgotPasswordText, { color: Colors[theme].textMuted }]}>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.footer}>
+              <Text style={[styles.footerText, { color: Colors[theme].textSecondary }]}>
+                {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+              </Text>
+              <TouchableOpacity onPress={toggleMode}>
+                <Text style={[styles.linkText, { color: Colors[theme].tint }]}>
+                  {mode === 'signin' ? 'Sign Up' : 'Sign In'}
                 </Text>
               </TouchableOpacity>
             </View>
-          )}
 
-          <TouchableOpacity
-            style={[styles.primaryButton, state.auth.isLoading && styles.primaryButtonDisabled]}
-            onPress={handleAuth}
-            disabled={state.auth.isLoading}
-          >
-            {state.auth.isLoading ? (
-              <ActivityIndicator color="#8B5CF6" />
-            ) : (
-              <Text style={styles.primaryButtonText}>
-                {mode === 'signin' ? 'Sign In' : 'Create Account'}
-              </Text>
-            )}
-          </TouchableOpacity>
-
-          {mode === 'signin' && (
-            <TouchableOpacity style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          )}
+          </SafeAreaView>
         </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-          </Text>
-          <TouchableOpacity onPress={toggleMode}>
-            <Text style={styles.linkText}>
-              {mode === 'signin' ? 'Sign Up' : 'Sign In'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-      </SafeAreaView>
-    </LinearGradient>
+      )}
+    </View>
   );
 }
 
@@ -235,7 +424,7 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
+    borderRadius: BorderRadius.medium,
     paddingVertical: 16,
     paddingHorizontal: 24,
     marginBottom: 12,
@@ -265,7 +454,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
+    borderRadius: BorderRadius.medium,
     paddingVertical: 16,
     paddingHorizontal: 20,
     marginBottom: 16,
@@ -283,7 +472,7 @@ const styles = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
-    borderRadius: 4,
+    borderRadius: BorderRadius.small,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.6)',
     marginRight: 12,
@@ -306,7 +495,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: BorderRadius.medium,
     paddingVertical: 16,
     paddingHorizontal: 24,
     marginBottom: 16,

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Audio } from 'expo-av';
-
-import { useApp } from '@/contexts/AppContext';
+import { useLocalSearchParams } from 'expo-router';
+// import { Audio } from 'expo-av'; // Not needed for local simulation
+import { MaterialIcons } from '@expo/vector-icons';
+import BackNavigation from '@/components/BackNavigation';
+import ActionButtons from '@/components/ActionButtons';
 
 export default function MeditationPlayer() {
-  const { dispatch } = useApp();
   const params = useLocalSearchParams();
 
   const sessionTitle = params.sessionTitle as string || "Morning Meditation";
@@ -18,15 +17,21 @@ export default function MeditationPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime] = useState(duration * 60); // Convert to seconds
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  // Note: Audio state removed since we're simulating playback locally
+  // const [sound, setSound] = useState<Audio.Sound | null>(null);
 
+  // Auto-start playback when component mounts
   useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+    // Small delay to ensure component is fully mounted
+    const timer = setTimeout(() => {
+      if (!isPlaying) {
+        togglePlayback();
+      }
+    }, 500) as any;
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array means this runs once on mount
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -34,23 +39,11 @@ export default function MeditationPlayer() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const togglePlayback = async () => {
-    if (isPlaying) {
-      await sound?.pauseAsync();
-    } else {
-      // For demo purposes, we'll just simulate playback
-      // In a real app, you'd load and play actual meditation audio
-      if (!sound) {
-        // Create a placeholder sound object for demo
-        const { sound: newSound } = await Audio.Sound.createAsync(
-          { uri: 'https://example.com/meditation-audio.mp3' },
-          { shouldPlay: true }
-        );
-        setSound(newSound);
-      } else {
-        await sound.playAsync();
-      }
-    }
+  const togglePlayback = () => {
+    // For demo purposes, we'll simulate playback locally without loading actual audio
+    // This ensures the app works offline as intended
+    // In a real app, you'd load and play actual meditation audio from local assets
+    console.log(isPlaying ? 'Pausing meditation playback' : 'Starting meditation playback simulation');
     setIsPlaying(!isPlaying);
   };
 
@@ -60,19 +53,19 @@ export default function MeditationPlayer() {
   // };
 
   const skipBackward = () => {
-    const newTime = Math.max(0, currentTime - 30);
+    const newTime = Math.max(0, currentTime - 15);
     setCurrentTime(newTime);
   };
 
   const skipForward = () => {
-    const newTime = Math.min(totalTime, currentTime + 30);
+    const newTime = Math.min(totalTime, currentTime + 15);
     setCurrentTime(newTime);
   };
 
   // Simulate progress for demo
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying && currentTime < totalTime) {
+    let interval: any;
+    if (isPlaying) {
       interval = setInterval(() => {
         setCurrentTime(prev => {
           if (prev >= totalTime) {
@@ -84,13 +77,37 @@ export default function MeditationPlayer() {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, currentTime, totalTime]);
+  }, [isPlaying, totalTime]);
 
   return (
-    <LinearGradient
-      colors={backgroundColor}
-      style={styles.container}
+    <View
+      style={[styles.container, { backgroundColor: backgroundColor[0] }]}
     >
+      <BackNavigation />
+
+      {/* Right side action buttons */}
+      <ActionButtons
+        buttons={[
+          {
+            iconName: 'favorite-border',
+            onPress: () => {
+              // TODO: Implement add to favorites functionality
+              console.log('Add to favorites');
+            },
+            accessibilityLabel: 'Add to favorites'
+          },
+          {
+            iconName: 'download',
+            onPress: () => {
+              // TODO: Implement download functionality
+              console.log('Download');
+            },
+            accessibilityLabel: 'Download'
+          }
+        ]}
+        style={styles.rightOverlayContainer}
+      />
+
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           <View style={styles.header}>
@@ -130,41 +147,25 @@ export default function MeditationPlayer() {
 
             <View style={styles.controls}>
               <TouchableOpacity style={styles.controlButton} onPress={skipBackward}>
-                <Text style={styles.controlButtonText}></Text>
+                <MaterialIcons name="replay-10" size={24} color="#FFFFFF" />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.playButton} onPress={togglePlayback}>
-                <Text style={styles.playButtonText}>
-                  {isPlaying ? '' : ''}
-                </Text>
+                <MaterialIcons
+                  name={isPlaying ? "pause" : "play-arrow"}
+                  size={32}
+                  color={backgroundColor[0]}
+                />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.controlButton} onPress={skipForward}>
-                <Text style={styles.controlButtonText}></Text>
+                <MaterialIcons name="forward-10" size={24} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.instructions}>
-            <Text style={styles.instructionTitle}>Meditation Guide</Text>
-            <Text style={styles.instructionText}>
-              Find a comfortable position. Close your eyes and focus on your breath.
-              When your mind wanders, gently bring it back to your breath.
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.endSessionButton}
-            onPress={() => {
-              dispatch({ type: 'END_SESSION' });
-              router.back();
-            }}
-          >
-            <Text style={styles.endSessionButtonText}>End Session</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   header: {
     alignItems: 'center',
@@ -271,32 +272,16 @@ const styles = StyleSheet.create({
   playButtonText: {
     fontSize: 32,
   },
-  instructions: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 32,
-  },
-  instructionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 12,
-  },
-  instructionText: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: 20,
-  },
-  endSessionButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  endSessionButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  rightOverlayContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    paddingTop: 50,
+    paddingRight: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
   },
 });

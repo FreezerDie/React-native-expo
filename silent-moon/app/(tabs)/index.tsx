@@ -2,174 +2,150 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 import { useApp } from '@/contexts/AppContext';
-
+import LogoWidget from '@/components/LogoWidget';
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { COURSES_DATA, getCoursesByType, getRecommendedItems } from '@/data/courses';
+import { getAudioCategoriesByType } from '@/data/audio';
 const { width } = Dimensions.get('window');
-
-const CATEGORIES = [
-  {
-    id: 'focus',
-    title: 'Focus',
-    emoji: '',
-    description: 'Attention & Concentration',
-    gradient: ['#FF6B6B', '#EE5A52'] as const,
-  },
-  {
-    id: 'sleep',
-    title: 'Sleep',
-    emoji: '',
-    description: 'Rest & Relaxation',
-    gradient: ['#6C5CE7', '#A29BFE'] as const,
-  },
-  {
-    id: 'music',
-    title: 'Music',
-    emoji: '',
-    description: 'Ambient Sounds',
-    gradient: ['#A8E6CF', '#52B788'] as const,
-  },
-];
 
 export default function HomeScreen() {
   const { state } = useApp();
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const textSecondary = useThemeColor({}, 'textSecondary');
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  };
+  // Get featured courses for the grid
+  const courseData = COURSES_DATA[0]; // First course: Mindfulness Basics
 
-  // const formatTime = (minutes: number) => {
-  //   const hours = Math.floor(minutes / 60);
-  //   const mins = minutes % 60;
-  //   if (hours > 0) {
-  //     return `${hours}h ${mins}m`;
-  //   }
-  //   return `${mins}m`;
-  // };
+  // Get first audio data for music and meditation types
+  const musicAudioData = getAudioCategoriesByType('music')[0]; // First music type audio
+  const meditationAudioData = getAudioCategoriesByType('meditation')[0]; // First meditation type audio
+
+  // Fallback to course data if audio not found
+  const musicData = musicAudioData || getCoursesByType('music')[0];
+  const meditationData = meditationAudioData || getCoursesByType('meditation')[0];
+
+  // Get recommended items from dummy data
+  const recommendedItems = getRecommendedItems();
 
   return (
-    <LinearGradient
-      colors={['#8B5CF6', '#A855F7', '#C084FC']}
-      style={styles.container}
-    >
+    <View style={[styles.container, { backgroundColor }]}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <Text style={styles.greeting}>{getGreeting()}</Text>
-            <Text style={styles.name}>Sarah</Text>
-            <Text style={styles.subtitle}>Ready for today&apos;s mindfulness practice?</Text>
+            <LogoWidget />
+            <Text style={[styles.greeting, { color: textColor }]}>Good Morning, {state.auth.currentUser?.name || 'User'}</Text>
+            <Text style={[styles.subtitle, { color: textSecondary }]}>We Wish you have a good day</Text>
           </View>
 
-          <View style={styles.dailyCard}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
-              style={styles.cardGradient}
-            >
-              <Text style={styles.cardEmoji}></Text>
-              <Text style={styles.cardTitle}>Daily Meditation</Text>
-              <Text style={styles.cardSubtitle}>10 minutes • Morning Focus</Text>
-              <TouchableOpacity style={styles.startButton}>
-                <Text style={styles.startButtonText}>Start Session</Text>
+          {/* Grid Layout */}
+          <View style={styles.gridContainer}>
+            {/* First Row - Course and Music Audio (half width each) */}
+            <View style={styles.gridRow}>
+              {/* Course Section */}
+              <TouchableOpacity
+                style={[styles.gridItem, styles.halfWidth]}
+                onPress={() => router.push(`/course-detail?id=${courseData.id}` as any)}
+              >
+                <View
+                  style={[styles.gridItemGradient, { backgroundColor: courseData.gradient[0] }]}
+                >
+                  <Text style={styles.gridItemTitle}>{courseData.title}</Text>
+                  <Text style={styles.gridItemSubtitle}>A COURSE</Text>
+                  <Text style={styles.gridItemLength}>{courseData.durationInMinutes} min</Text>
+                  <TouchableOpacity style={styles.startButton}>
+                    <Text style={styles.startButtonText}>Start</Text>
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
-            </LinearGradient>
-          </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Explore Categories</Text>
-            <View style={styles.categoriesGrid}>
-              {CATEGORIES.map((category) => (
-                <TouchableOpacity key={category.id} style={styles.categoryCard} onPress={() => router.push(`/(tabs)/${category.id}` as any)}>
-                    <LinearGradient
-                      colors={category.gradient}
-                      style={styles.categoryGradient}
-                    >
-                      <Text style={styles.categoryEmoji}>{category.emoji}</Text>
-                      <Text style={styles.categoryTitle}>{category.title}</Text>
-                      <Text style={styles.categoryDescription}>{category.description}</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
-              ))}
+              {/* Music Audio Section */}
+              <TouchableOpacity
+                style={[styles.gridItem, styles.halfWidth]}
+                onPress={() => router.push(`/course-detail?id=${musicData.id}` as any)}
+              >
+                <View
+                  style={[styles.gridItemGradient, { backgroundColor: musicData.gradient[0] }]}
+                >
+                  <Text style={styles.gridItemTitle}>{musicData.title}</Text>
+                  <Text style={styles.gridItemSubtitle}>MUSIC</Text>
+                  <Text style={styles.gridItemLength}>
+                    {musicData.durationInMinutes} min
+                  </Text>
+                  <TouchableOpacity style={styles.startButton}>
+                    <Text style={styles.startButtonText}>Start</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
             </View>
+
+            {/* Second Row - Meditation Audio (full width, smaller height) */}
+            <TouchableOpacity
+              style={[styles.gridItem, styles.fullWidth, styles.smallerHeight]}
+              onPress={() => router.push(`/course-detail?id=${meditationData.id}` as any)}
+            >
+              <View
+                style={[styles.gridItemGradient, styles.smallerHeight, { backgroundColor: meditationData.gradient[0] }]}
+              >
+                <Text style={styles.gridItemTitle}>{meditationData.title}</Text>
+                <Text style={styles.gridItemSubtitle}>MEDITATION</Text>
+                <Text style={styles.gridItemLength}>
+                  {meditationData.durationInMinutes} min
+                </Text>
+
+                <TouchableOpacity style={styles.startButton}>
+                  <Ionicons name="play" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Recommended for You</Text>
+          {/* Recommended for you section */}
+          <View style={styles.recommendedSection}>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Recommended for you</Text>
+            <Text style={[styles.sectionSubtitle, { color: textSecondary }]}>Meditation sessions tailored to your preferences</Text>
+
+            {/* Recommended Horizontal Scroll */}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              style={styles.recommendationsScroll}
+              style={styles.recommendedScroll}
+              contentContainerStyle={styles.recommendedScrollContent}
             >
-              <View style={styles.recommendationCard}>
-                <LinearGradient
-                  colors={['#FF6B6B', '#EE5A52']}
-                  style={styles.recommendationGradient}
+              {recommendedItems.map((item, index) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[
+                    styles.recommendedItem,
+                    index === 0 ? styles.recommendedItemFirst : styles.recommendedItemMargin
+                  ]}
+                  onPress={() => router.push(`/course-detail?id=${item.id}` as any)}
                 >
-                  <Text style={styles.recommendationEmoji}></Text>
-                  <Text style={styles.recommendationTitle}>Morning Calm</Text>
-                  <Text style={styles.recommendationDuration}>15 min</Text>
-                </LinearGradient>
-              </View>
+                  <View style={styles.recommendedCardContainer}>
+                    <View
+                      style={[styles.recommendedCard, { backgroundColor: item.gradient[0] }]}
+                    >
+                      <View style={styles.recommendedCardContent}>
+                        <Text style={styles.recommendedCardDuration}>{item.durationInMinutes} min</Text>
+                      </View>
+                    </View>
 
-              <View style={styles.recommendationCard}>
-                <LinearGradient
-                  colors={['#6C5CE7', '#A29BFE']}
-                  style={styles.recommendationGradient}
-                >
-                  <Text style={styles.recommendationEmoji}></Text>
-                  <Text style={styles.recommendationTitle}>Sleep Story</Text>
-                  <Text style={styles.recommendationDuration}>20 min</Text>
-                </LinearGradient>
-              </View>
-
-              <View style={styles.recommendationCard}>
-                <LinearGradient
-                  colors={['#A8E6CF', '#52B788']}
-                  style={styles.recommendationGradient}
-                >
-                  <Text style={styles.recommendationEmoji}></Text>
-                  <Text style={styles.recommendationTitle}>Ocean Waves</Text>
-                  <Text style={styles.recommendationDuration}>∞</Text>
-                </LinearGradient>
-              </View>
-            </ScrollView>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Recent Activity</Text>
-            <View style={styles.activityList}>
-              {state.recentSessions.length > 0 ? (
-                state.recentSessions.slice(0, 3).map((session, index) => (
-                  <View key={session.id} style={styles.activityItem}>
-                    <Text style={styles.activityEmoji}>
-                      {session.title.includes('Meditation') ? '' :
-                       session.title.includes('Sleep') ? '' : ''}
-                    </Text>
-                    <View style={styles.activityContent}>
-                      <Text style={styles.activityTitle}>{session.title}</Text>
-                      <Text style={styles.activityTime}>
-                        {Math.floor((new Date().getTime() - session.date.getTime()) / (1000 * 60 * 60 * 24))} days ago • {session.duration} min
-                      </Text>
+                    <View style={styles.recommendedTextContainer}>
+                      <Text style={styles.recommendedTitle} numberOfLines={2}>{item.title}</Text>
+                      <Text style={styles.recommendedTopic}>{item.type}</Text>
+                      <Text style={styles.recommendedLength}>{item.durationInMinutes} min</Text>
                     </View>
                   </View>
-                ))
-              ) : (
-                <View style={styles.activityItem}>
-                  <Text style={styles.activityEmoji}></Text>
-                  <View style={styles.activityContent}>
-                    <Text style={styles.activityTitle}>Start your first session!</Text>
-                    <Text style={styles.activityTime}>Choose from our meditation collection</Text>
-                  </View>
-                </View>
-              )}
-            </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -189,162 +165,197 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   greeting: {
-    fontSize: 16,
-    color: '#E0E7FF',
+    fontSize: 18,
     fontWeight: '500',
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginTop: 4,
+    marginTop: 16,
+    textAlign: 'left',
   },
   subtitle: {
     fontSize: 16,
-    color: '#E0E7FF',
     marginTop: 8,
     lineHeight: 24,
+    textAlign: 'left',
   },
-  dailyCard: {
-    marginHorizontal: 24,
-    marginBottom: 32,
-    borderRadius: 16,
-    overflow: 'hidden',
+  // Grid styles
+  gridContainer: {
+    paddingHorizontal: 24,
+    paddingBottom: 12,
   },
-  cardGradient: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  cardEmoji: {
-    fontSize: 48,
+  gridRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  gridItem: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  halfWidth: {
+    width: (width - 48 - 16) / 2, // 48 for padding, 16 for gap
+    height: 140,
+  },
+  fullWidth: {
+    width: width - 48, // Full width minus padding
+    height: 120,
+  },
+  smallerHeight: {
+    height: 100,
+  },
+  gridItemGradient: {
+    flex: 1,
+    padding: 20,
+    position: 'relative',
+  },
+  gridItemEmoji: {
+    fontSize: 32,
     marginBottom: 8,
   },
-  cardSubtitle: {
-    fontSize: 14,
-    color: '#E0E7FF',
-    marginBottom: 20,
+  gridItemTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'left',
+    position: 'absolute',
+    left: 20,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+  },
+  gridItemSubtitle: {
+    fontSize: 8,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'left',
+    textTransform: 'uppercase',
+    position: 'absolute',
+    left: 20,
+    top: '50%',
+    transform: [{ translateY: 0 }],
+  },
+  gridItemType: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+    marginBottom: 8,
+  },
+  gridItemLength: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'left',
+    position: 'absolute',
+    left: 20,
+    bottom: 20,
+  },
+  gridItemDescription: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.7)',
+    textAlign: 'center',
+    lineHeight: 16,
+    marginBottom: 16,
   },
   startButton: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    minWidth: 120,
-    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 25,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
   },
   startButtonText: {
-    color: '#8B5CF6',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 14,
     fontWeight: '600',
   },
-  section: {
-    marginBottom: 32,
+  playButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 30,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  // Recommended section styles
+  recommendedSection: {
     paddingHorizontal: 24,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 16,
-  },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  categoryCard: {
-    width: (width - 48 - 16) / 2,
-    height: 120,
-    borderRadius: 16,
-    marginBottom: 16,
-    overflow: 'hidden',
-  },
-  categoryGradient: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  categoryEmoji: {
-    fontSize: 32,
     marginBottom: 8,
+    textAlign: 'left',
   },
-  categoryTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  categoryDescription: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-  },
-  recommendationsScroll: {
-    marginTop: 8,
-  },
-  recommendationCard: {
-    width: 140,
-    height: 100,
-    borderRadius: 12,
-    marginRight: 12,
-    overflow: 'hidden',
-  },
-  recommendationGradient: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  recommendationEmoji: {
-    fontSize: 24,
-    marginBottom: 8,
-  },
-  recommendationTitle: {
+  sectionSubtitle: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: 24,
+    textAlign: 'left',
+    opacity: 0.8,
   },
-  recommendationDuration: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
+  recommendedScroll: {
+    marginHorizontal: -24, // Extend to full width
   },
-  activityList: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 12,
-    padding: 16,
+  recommendedScrollContent: {
+    paddingHorizontal: 24, // Restore padding for content
   },
-  activityItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+  recommendedItem: {
+    width: 140, // Fixed width for horizontal items
+    height: 220, // Increased height to accommodate text below
+    borderRadius: 16,
+    overflow: 'hidden',
   },
-  activityEmoji: {
-    fontSize: 24,
+  recommendedItemFirst: {
     marginRight: 16,
   },
-  activityContent: {
+  recommendedItemMargin: {
+    marginRight: 16,
+  },
+  recommendedCardContainer: {
     flex: 1,
   },
-  activityTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#FFFFFF',
+  recommendedCard: {
+    height: 120, // Smaller card height
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  recommendedCardContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 12,
+  },
+  recommendedCardDuration: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+  },
+  recommendedTextContainer: {
+    paddingTop: 12,
+    paddingHorizontal: 4,
+  },
+  recommendedTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#333333',
+    textAlign: 'center',
     marginBottom: 4,
   },
-  activityTime: {
-    fontSize: 12,
-    color: '#E0E7FF',
+  recommendedTopic: {
+    fontSize: 10,
+    color: '#666666',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+    marginBottom: 2,
+  },
+  recommendedLength: {
+    fontSize: 10,
+    color: '#666666',
+    textAlign: 'center',
   },
 });
