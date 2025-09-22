@@ -105,9 +105,18 @@ export default function CourseDetailScreen() {
 
             {/* Audio Tracks List */}
             <View style={styles.audioSection}>
-              <Text style={[styles.sectionTitle, { color: textColor }]}>
-                Audio Sessions ({audioTracks.length})
-              </Text>
+              <View style={styles.sectionHeader}>
+                <Text style={[styles.sectionTitle, { color: textColor }]}>
+                  Audio Sessions ({audioTracks.length})
+                </Text>
+                <TouchableOpacity
+                  style={styles.viewAllButton}
+                  onPress={() => router.push('/audio-list' as any)}
+                >
+                  <Text style={[styles.viewAllText, { color: textColor }]}>View All</Text>
+                  <Ionicons name="chevron-forward" size={16} color={textColor} />
+                </TouchableOpacity>
+              </View>
 
               {audioTracks.length > 0 ? (
                 <View style={styles.audioList}>
@@ -121,10 +130,11 @@ export default function CourseDetailScreen() {
                       onPress={() => {
                         // Navigate to player screen with track details
                         router.push({
-                          pathname: '/player/meditation',
+                          pathname: '/player' as any,
                           params: {
                             sessionTitle: track.title,
-                            duration: track.durationInMinutes.toString()
+                            duration: track.durationInMinutes.toString(),
+                            audioUrl: track.url
                           }
                         });
                       }}
@@ -135,10 +145,11 @@ export default function CourseDetailScreen() {
                           onPress={() => {
                             // Navigate to player screen with track details
                             router.push({
-                              pathname: '/player/meditation',
+                              pathname: '/player' as any,
                               params: {
                                 sessionTitle: track.title,
-                                duration: track.durationInMinutes.toString()
+                                duration: track.durationInMinutes.toString(),
+                                audioUrl: track.url
                               }
                             });
                           }}
@@ -278,10 +289,26 @@ const styles = StyleSheet.create({
   audioSection: {
     marginTop: 8,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+  },
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  viewAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginRight: 4,
   },
   audioList: {
     borderRadius: 16,

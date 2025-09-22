@@ -108,8 +108,7 @@ export type RootStackParamList = {
   'onboarding/welcome': undefined;
   'onboarding/topics': undefined;
   'onboarding/time-preferences': undefined;
-  'player/meditation': {
-    sessionId: string;
+  'player': {
     sessionTitle: string;
     duration: number;
   };

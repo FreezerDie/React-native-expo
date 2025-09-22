@@ -12,8 +12,6 @@ interface BackNavigationProps {
 
 export default function BackNavigation({ onPress, style }: BackNavigationProps) {
   const textColor = useThemeColor({}, 'text');
-  const backgroundColor = useThemeColor({}, 'background');
-  const borderColor = useThemeColor({}, 'border');
 
   const handleBack = () => {
     if (onPress) {
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10,
+    zIndex: 20,
     paddingTop: 50,
     paddingLeft: 20,
   },
