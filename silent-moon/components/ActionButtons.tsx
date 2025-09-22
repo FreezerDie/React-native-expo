@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface ActionButtonConfig {
-  iconName: keyof typeof MaterialIcons.glyphMap;
+  iconName: string;
   onPress: () => void;
   accessibilityLabel?: string;
 }
@@ -24,7 +24,7 @@ export default function ActionButtons({ buttons, style }: ActionButtonsProps) {
           activeOpacity={0.7}
           accessibilityLabel={button.accessibilityLabel}
         >
-          <MaterialIcons name={button.iconName} size={20} color="#333333" />
+          <MaterialIcons name={button.iconName as keyof typeof MaterialIcons.glyphMap} size={20} color="#333333" />
         </TouchableOpacity>
       ))}
     </View>

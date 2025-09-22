@@ -1,17 +1,4 @@
 // Audio data structure
-export interface AudioCategory {
-  id: string;
-  title: string;
-  description: string;
-  emoji: string;
-  gradient: string[];
-  tracks: number;
-  durationInMinutes: number;
-  topicId: string;
-  courseId: string;
-  type: 'music' | 'meditation';
-}
-
 export interface AudioTrack {
   id: string;
   title: string;
@@ -21,115 +8,75 @@ export interface AudioTrack {
   emoji: string;
   topicId: string;
   courseId: string;
+  type: string;
+  gradient: string[];
+  url: string;
 }
 
-// Music categories with topic and course IDs
-export const AUDIO_CATEGORIES: AudioCategory[] = [
-  {
-    id: 'nature',
-    title: 'Nature Sounds',
-    description: 'Forest, rain, ocean waves',
-    emoji: '🌿',
-    gradient: ['#A8E6CF', '#52B788'],
-    tracks: 25,
-    durationInMinutes: 120,
-    topicId: 'ambient-nature',
-    courseId: 'nature-sounds-collection',
-    type: 'music'
-  },
-  {
-    id: 'ambient',
-    title: 'Ambient',
-    description: 'Calming electronic tones',
-    emoji: '🌊',
-    gradient: ['#667EEA', '#764BA2'],
-    tracks: 18,
-    durationInMinutes: 90,
-    topicId: 'lo-fi-chill',
-    courseId: 'ambient-electronic-series',
-    type: 'music'
-  },
-  {
-    id: 'instrumental',
-    title: 'Instrumental',
-    description: 'Piano, guitar, strings',
-    emoji: '🎵',
-    gradient: ['#F093FB', '#F5576C'],
-    tracks: 32,
-    durationInMinutes: 160,
-    topicId: 'piano-serenades',
-    courseId: 'instrumental-masterpieces',
-    type: 'music'
-  },
-  {
-    id: 'meditation-bells',
-    title: 'Meditation Bells',
-    description: 'Tibetan bowls and chimes',
-    emoji: '🔔',
-    gradient: ['#4ECDC4', '#44A08D'],
-    tracks: 15,
-    durationInMinutes: 75,
-    topicId: 'tibetan-singing-bowls',
-    courseId: 'meditation-bells-collection',
-    type: 'meditation'
-  },
+// S3 Audio URLs array
+export const S3_AUDIO_URLS = [
+  'https://s3.tebi.io/silent-moon/audio/Alberto%20Benati%20-%20Glittering%20Key.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Alberto%20Benati%20-%20Night%20Before.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Alberto%20Benati%20-%20Northern%20Star.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Alberto%20Benati%20-%20Rain%20Forest.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Daniel%20Crane%20-%20Sundance.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Limitless%20-%20Japan%20Relaxing.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Limitless%20-%20The%20Healing%20Stone.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Vivian%20%20Giovani%20-%20Sunny%20Fields.mp3',
+  'https://s3.tebi.io/silent-moon/audio/Vlasta%20Marek%20-%20Life.mp3',
+  'https://s3.tebi.io/silent-moon/audio/autumn-sky-meditation-7618.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-background-music-386976.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-blue-138131.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-music-256141.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-music-289149.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-music-338902.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-music-without-nature-sound-256142.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-relax-406595.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-relax-with-nature-sound-406596.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-relaxing-music-background-320405.mp3',
+  'https://s3.tebi.io/silent-moon/audio/meditation-spiritual-music-330169.mp3'
 ];
+
+// Function to get a random S3 URL for audio tracks
+export const getRandomS3Url = (): string => {
+  const randomIndex = Math.floor(Math.random() * S3_AUDIO_URLS.length);
+  return S3_AUDIO_URLS[randomIndex];
+};
 
 // Helper functions for audio data
-export const getAudioCategoriesByType = (type: AudioCategory['type']) => {
-  return AUDIO_CATEGORIES.filter(category => category.type === type);
-};
-
 export const getAudioTracksByCourseId = (courseId: string) => {
-  return COURSE_AUDIO_TRACKS.filter(track => track.courseId === courseId);
+  return AUDIO_TRACKS.filter(track => track.courseId === courseId);
 };
 
-// Popular tracks with topic and course IDs
-export const POPULAR_TRACKS: AudioTrack[] = [
-  {
-    id: 'rain-forest',
-    title: 'Rain in the Forest',
-    artist: 'Nature Sounds',
-    duration: '∞',
-    durationInMinutes: 0,
-    emoji: '🌧️',
-    topicId: 'ambient-nature',
-    courseId: 'nature-sounds-collection'
-  },
-  {
-    id: 'ocean-waves',
-    title: 'Ocean Waves',
-    artist: 'Coastal Collection',
-    duration: '∞',
-    durationInMinutes: 0,
-    emoji: '🌊',
-    topicId: 'ocean-waves',
-    courseId: 'nature-sounds-collection'
-  },
-  {
-    id: 'deep-space',
-    title: 'Deep Space',
-    artist: 'Ambient Collective',
-    duration: '45:32',
-    durationInMinutes: 46,
-    emoji: '🌌',
-    topicId: 'lo-fi-chill',
-    courseId: 'ambient-electronic-series'
-  },
-  {
-    id: 'mountain-stream',
-    title: 'Mountain Stream',
-    artist: 'Nature Sounds',
-    duration: '∞',
-    durationInMinutes: 0,
-    emoji: '🏔️',
-    topicId: 'ambient-nature',
-    courseId: 'nature-sounds-collection'
-  },
-];
+export const getAudioTracksByType = (type: string) => {
+  return AUDIO_TRACKS.filter(track => track.type === type);
+};
+
+// Generate random gradient colors
+const generateRandomGradient = (): [string, string] => {
+  const colors = [
+    '#FF6B6B', '#EE5A52', '#6C5CE7', '#A29BFE', '#A8E6CF', '#52B788',
+    '#F093FB', '#F5576C', '#4ECDC4', '#44A08D', '#667EEA', '#764BA2',
+    '#45B7D1', '#96CEB4', '#FDCB6E', '#E17055', '#FD79A8', '#E84393',
+    '#74B9FF', '#0984E3', '#00B894', '#00CEC9', '#E17055', '#D63031',
+    '#FD79A8', '#E84393', '#6C5CE7', '#A29BFE', '#FD79A8', '#E84393'
+  ];
+
+  const color1 = colors[Math.floor(Math.random() * colors.length)];
+  let color2 = colors[Math.floor(Math.random() * colors.length)];
+
+  // Ensure different colors for gradient
+  while (color2 === color1) {
+    color2 = colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  return [color1, color2];
+};
+
+
 
 // Course-specific audio tracks
-export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
+export const AUDIO_TRACKS: AudioTrack[] = [
   // Mindfulness Basics course tracks
   {
     id: 'mindfulness-session-1',
@@ -139,7 +86,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 13,
     emoji: '🫁',
     topicId: 'mindfulness-basics',
-    courseId: 'mindfulness-basics'
+    courseId: 'mindfulness-basics',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'mindfulness-session-2',
@@ -149,7 +99,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 19,
     emoji: '🧘',
     topicId: 'mindfulness-basics',
-    courseId: 'mindfulness-basics'
+    courseId: 'mindfulness-basics',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'mindfulness-session-3',
@@ -159,7 +112,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 16,
     emoji: '🚶',
     topicId: 'mindfulness-basics',
-    courseId: 'mindfulness-basics'
+    courseId: 'mindfulness-basics',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
 
   // Daily Meditation course tracks
@@ -171,7 +127,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 11,
     emoji: '🌅',
     topicId: 'daily-meditation',
-    courseId: 'daily-meditation'
+    courseId: 'daily-meditation',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'daily-meditation-2',
@@ -181,7 +140,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 13,
     emoji: '🌙',
     topicId: 'daily-meditation',
-    courseId: 'daily-meditation'
+    courseId: 'daily-meditation',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'daily-meditation-3',
@@ -191,7 +153,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 9,
     emoji: '🙏',
     topicId: 'daily-meditation',
-    courseId: 'daily-meditation'
+    courseId: 'daily-meditation',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
 
   // Stress Relief Mastery course tracks
@@ -203,7 +168,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 21,
     emoji: '💪',
     topicId: 'stress-relief',
-    courseId: 'stress-relief-course'
+    courseId: 'stress-relief-course',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'stress-relief-2',
@@ -213,7 +181,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 16,
     emoji: '🫁',
     topicId: 'stress-relief',
-    courseId: 'stress-relief-course'
+    courseId: 'stress-relief-course',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'stress-relief-3',
@@ -223,7 +194,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 19,
     emoji: '🧠',
     topicId: 'stress-relief',
-    courseId: 'stress-relief-course'
+    courseId: 'stress-relief-course',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
 
   // Sleep Stories course tracks
@@ -235,7 +209,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 26,
     emoji: '🌲',
     topicId: 'sleep-stories',
-    courseId: 'sleep-stories'
+    courseId: 'sleep-stories',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'sleep-story-2',
@@ -245,7 +222,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 23,
     emoji: '🌊',
     topicId: 'sleep-stories',
-    courseId: 'sleep-stories'
+    courseId: 'sleep-stories',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'sleep-story-3',
@@ -255,7 +235,11 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 20,
     emoji: '🏔️',
     topicId: 'sleep-stories',
-    courseId: 'sleep-stories'
+    courseId: 'sleep-stories',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
+
   },
 
   // Focus Enhancement course tracks
@@ -267,7 +251,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 17,
     emoji: '🎯',
     topicId: 'focus-enhancement',
-    courseId: 'focus-enhancement'
+    courseId: 'focus-enhancement',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'focus-session-2',
@@ -277,7 +264,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 15,
     emoji: '🧠',
     topicId: 'focus-enhancement',
-    courseId: 'focus-enhancement'
+    courseId: 'focus-enhancement',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'focus-session-3',
@@ -287,7 +277,11 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 13,
     emoji: '✨',
     topicId: 'focus-enhancement',
-    courseId: 'focus-enhancement'
+    courseId: 'focus-enhancement',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
+
   },
 
   // Nature Sounds Collection tracks
@@ -299,7 +293,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 0,
     emoji: '🎐',
     topicId: 'ambient-nature',
-    courseId: 'nature-sounds-collection'
+    courseId: 'nature-sounds-collection',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'nature-birds',
@@ -309,7 +306,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 0,
     emoji: '🐦',
     topicId: 'ambient-nature',
-    courseId: 'nature-sounds-collection'
+    courseId: 'nature-sounds-collection',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
 
   // Meditation Bells tracks
@@ -321,7 +321,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 16,
     emoji: '🔔',
     topicId: 'tibetan-singing-bowls',
-    courseId: 'meditation-bells-collection'
+    courseId: 'meditation-bells-collection',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'tibetan-bowl-2',
@@ -331,7 +334,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 13,
     emoji: '🔮',
     topicId: 'tibetan-singing-bowls',
-    courseId: 'meditation-bells-collection'
+    courseId: 'meditation-bells-collection',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
 
   // Ambient Meditation tracks
@@ -343,7 +349,10 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 31,
     emoji: '🌌',
     topicId: 'lo-fi-chill',
-    courseId: 'ambient-electronic-series'
+    courseId: 'ambient-electronic-series',
+    type: 'music',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   },
   {
     id: 'ambient-piano',
@@ -353,6 +362,40 @@ export const COURSE_AUDIO_TRACKS: AudioTrack[] = [
     durationInMinutes: 26,
     emoji: '🎹',
     topicId: 'piano-serenades',
-    courseId: 'ambient-electronic-series'
+    courseId: 'ambient-electronic-series',
+    type: 'meditation',
+    gradient: generateRandomGradient(),
+    url: getRandomS3Url()
   }
 ];
+
+// Audio categories for music screen
+export const AUDIO_CATEGORIES = [
+  {
+    id: 'nature',
+    title: 'Nature Sounds',
+    tracks: 4,
+    gradient: ['#A8E6CF', '#52B788']
+  },
+  {
+    id: 'meditation',
+    title: 'Meditation',
+    tracks: 8,
+    gradient: ['#6C5CE7', '#A29BFE']
+  },
+  {
+    id: 'music',
+    title: 'Ambient Music',
+    tracks: 12,
+    gradient: ['#F093FB', '#F5576C']
+  },
+  {
+    id: 'sleep',
+    title: 'Sleep Stories',
+    tracks: 3,
+    gradient: ['#667EEA', '#764BA2']
+  }
+];
+
+// Popular tracks for music screen
+export const POPULAR_TRACKS = AUDIO_TRACKS.slice(0, 5);

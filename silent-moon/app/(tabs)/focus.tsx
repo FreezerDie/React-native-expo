@@ -81,7 +81,7 @@ export default function FocusScreen() {
 
     // Navigate to meditation player
     router.push({
-      pathname: '/player/meditation',
+      pathname: '/player',
       params: {
         sessionTitle,
         duration: duration.toString(),

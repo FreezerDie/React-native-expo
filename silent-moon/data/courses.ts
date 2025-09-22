@@ -16,6 +16,7 @@ export interface Course {
   enrolled: number;
   favorites: number;
   listeningCount: number;
+  url?: string;
 }
 
 // Dummy course data
@@ -129,81 +130,14 @@ export const COURSES_DATA: Course[] = [
   },
 ];
 
-// Helper functions for course data
-export const getCoursesByType = (type: Course['type']) => {
-  return COURSES_DATA.filter(course => course.type === type);
-};
-
-export const getFeaturedCourses = () => {
-  return COURSES_DATA.slice(0, 3);
-};
-
 export const getCourseById = (id: string) => {
   return COURSES_DATA.find(course => course.id === id);
 };
 
-// Recommended items combining courses and audio content
-export const RECOMMENDED_ITEMS = [
-  {
-    id: 'meditation-bells-recommended',
-    title: 'Meditation Bells',
-    type: 'meditation' as const,
-    description: 'Experience the ancient healing vibrations of Tibetan singing bowls and meditation bells. These resonant tones create a sacred space for deep meditation and spiritual connection.',
-    emoji: '🔔',
-    coverImage: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop',
-    gradient: ['#4ECDC4', '#44A08D'],
-    duration: '15-30 min',
-    durationInMinutes: 22,
-    sessions: 15,
-    level: 'beginner' as const,
-    instructor: 'Tibetan Masters',
-    rating: 4.8,
-    enrolled: 950,
-    favorites: 680,
-    listeningCount: 1650,
-  },
-  {
-    id: 'ambient-recommended',
-    title: 'Ambient Meditation',
-    type: 'meditation' as const,
-    description: 'Calming electronic tones designed specifically for meditation practice. Let these ambient soundscapes guide you into deeper states of relaxation and mindfulness.',
-    emoji: '🌊',
-    coverImage: 'https://images.unsplash.com/photo-1558021212-51b6ecfa0db9?w=400&h=300&fit=crop',
-    gradient: ['#667EEA', '#764BA2'],
-    duration: '45 min',
-    durationInMinutes: 45,
-    sessions: 18,
-    level: 'intermediate' as const,
-    instructor: 'Ambient Collective',
-    rating: 4.6,
-    enrolled: 1200,
-    favorites: 840,
-    listeningCount: 2100,
-  },
-  {
-    id: 'nature-sounds-recommended',
-    title: 'Nature Sounds Collection',
-    type: 'music' as const,
-    description: 'A comprehensive collection of nature recordings including forest ambiances, ocean waves, and gentle rain. Perfect for creating a peaceful environment for meditation or relaxation.',
-    emoji: '🌿',
-    coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-    gradient: ['#A8E6CF', '#52B788'],
-    duration: '∞',
-    durationInMinutes: 60,
-    sessions: 25,
-    level: 'beginner' as const,
-    instructor: 'Nature Collective',
-    rating: 4.9,
-    enrolled: 2100,
-    favorites: 1450,
-    listeningCount: 5200,
-  }
-];
 
 export const getRecommendedItems = () => {
   // Combine meditation courses with recommended items
   return [
-    ...getCoursesByType('meditation'),
-    ...RECOMMENDED_ITEMS
+    ...COURSES_DATA.slice(0, 3),
   ];
 };

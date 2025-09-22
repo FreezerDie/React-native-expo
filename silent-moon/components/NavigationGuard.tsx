@@ -68,7 +68,7 @@ export default function NavigationGuard({ children }: NavigationGuardProps) {
     }
 
     // If user is authenticated and onboarded but on some other screen, go to tabs
-    // (excluding course-detail and player which are allowed)
+    // (excluding course-detail which are allowed)
     if (state.auth.isAuthenticated && state.isOnboarded && !inAuthGroup && !inOnboardingGroup && !inTabsGroup && !inCourseDetail && !inPlayer) {
       console.log('NavigationGuard - Redirecting authenticated onboarded user to tabs');
       setTimeout(() => router.replace('/(tabs)'), 100);

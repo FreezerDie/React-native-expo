@@ -7,8 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '@/contexts/AppContext';
 import LogoWidget from '@/components/LogoWidget';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { COURSES_DATA, getCoursesByType, getRecommendedItems } from '@/data/courses';
-import { getAudioCategoriesByType } from '@/data/audio';
+import { COURSES_DATA, getRecommendedItems } from '@/data/courses';
+import { getAudioTracksByType } from '@/data/audio';
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
@@ -21,12 +21,12 @@ export default function HomeScreen() {
   const courseData = COURSES_DATA[0]; // First course: Mindfulness Basics
 
   // Get first audio data for music and meditation types
-  const musicAudioData = getAudioCategoriesByType('music')[0]; // First music type audio
-  const meditationAudioData = getAudioCategoriesByType('meditation')[0]; // First meditation type audio
+  const musicAudioData = getAudioTracksByType('music')[0]; // First music type audio
+  const meditationAudioData = getAudioTracksByType('meditation')[0]; // First meditation type audio
 
   // Fallback to course data if audio not found
-  const musicData = musicAudioData || getCoursesByType('music')[0];
-  const meditationData = meditationAudioData || getCoursesByType('meditation')[0];
+  const musicData = musicAudioData || getAudioTracksByType('music')[0];
+  const meditationData = meditationAudioData || getAudioTracksByType('meditation')[0];
 
   // Get recommended items from dummy data
   const recommendedItems = getRecommendedItems();
@@ -46,9 +46,8 @@ export default function HomeScreen() {
             {/* First Row - Course and Music Audio (half width each) */}
             <View style={styles.gridRow}>
               {/* Course Section */}
-              <TouchableOpacity
+              <View
                 style={[styles.gridItem, styles.halfWidth]}
-                onPress={() => router.push(`/course-detail?id=${courseData.id}` as any)}
               >
                 <View
                   style={[styles.gridItemGradient, { backgroundColor: courseData.gradient[0] }]}
@@ -56,39 +55,50 @@ export default function HomeScreen() {
                   <Text style={styles.gridItemTitle}>{courseData.title}</Text>
                   <Text style={styles.gridItemSubtitle}>A COURSE</Text>
                   <Text style={styles.gridItemLength}>{courseData.durationInMinutes} min</Text>
-                  <TouchableOpacity style={styles.startButton}>
+                  <TouchableOpacity
+                    style={styles.startButton}
+                    onPress={() => router.push(`/course-detail?id=${courseData.id}` as any)}
+                  >
                     <Text style={styles.startButtonText}>Start</Text>
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              </View>
 
               {/* Music Audio Section */}
-              <TouchableOpacity
+              <View
                 style={[styles.gridItem, styles.halfWidth]}
-                onPress={() => router.push(`/course-detail?id=${musicData.id}` as any)}
               >
                 <View
-                  style={[styles.gridItemGradient, { backgroundColor: musicData.gradient[0] }]}
+                  style={[styles.gridItemGradient, { backgroundColor: musicData.gradient[0] as string }]}
                 >
                   <Text style={styles.gridItemTitle}>{musicData.title}</Text>
                   <Text style={styles.gridItemSubtitle}>MUSIC</Text>
                   <Text style={styles.gridItemLength}>
                     {musicData.durationInMinutes} min
                   </Text>
-                  <TouchableOpacity style={styles.startButton}>
+                  <TouchableOpacity
+                    style={styles.startButton}
+                    onPress={() => router.push({
+                      pathname: '/player' as any,
+                      params: {
+                        sessionTitle: musicData.title,
+                        duration: musicData.durationInMinutes,
+                        audioUrl: musicData.url
+                      }
+                    })}
+                  >
                     <Text style={styles.startButtonText}>Start</Text>
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              </View>
             </View>
 
             {/* Second Row - Meditation Audio (full width, smaller height) */}
-            <TouchableOpacity
+            <View
               style={[styles.gridItem, styles.fullWidth, styles.smallerHeight]}
-              onPress={() => router.push(`/course-detail?id=${meditationData.id}` as any)}
             >
               <View
-                style={[styles.gridItemGradient, styles.smallerHeight, { backgroundColor: meditationData.gradient[0] }]}
+                style={[styles.gridItemGradient, styles.smallerHeight, { backgroundColor: meditationData.gradient[0] as string }]}
               >
                 <Text style={styles.gridItemTitle}>{meditationData.title}</Text>
                 <Text style={styles.gridItemSubtitle}>MEDITATION</Text>
@@ -96,11 +106,21 @@ export default function HomeScreen() {
                   {meditationData.durationInMinutes} min
                 </Text>
 
-                <TouchableOpacity style={styles.startButton}>
+                <TouchableOpacity
+                  style={styles.startButton}
+                  onPress={() => router.push({
+                    pathname: '/player' as any,
+                    params: {
+                      sessionTitle: meditationData.title,
+                      duration: meditationData.durationInMinutes,
+                      audioUrl: meditationData.url
+                    }
+                  })}
+                >
                   <Ionicons name="play" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </View>
           </View>
 
           {/* Recommended for you section */}
@@ -122,7 +142,20 @@ export default function HomeScreen() {
                     styles.recommendedItem,
                     index === 0 ? styles.recommendedItemFirst : styles.recommendedItemMargin
                   ]}
-                  onPress={() => router.push(`/course-detail?id=${item.id}` as any)}
+                  onPress={() => {
+                    if (item.type === 'course') {
+                      router.push(`/course-detail?id=${item.id}` as any);
+                    } else if (item.type === 'music' || item.type === 'meditation') {
+                      router.push({
+                        pathname: '/player' as any,
+                        params: {
+                          sessionTitle: item.title,
+                          duration: item.durationInMinutes,
+                          audioUrl: item.url || ''
+                        }
+                      });
+                    }
+                  }}
                 >
                   <View style={styles.recommendedCardContainer}>
                     <View

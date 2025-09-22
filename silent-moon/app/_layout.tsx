@@ -25,7 +25,7 @@ function RootLayoutNav() {
           <Stack.Screen name="onboarding/time-preferences" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="course-detail" options={{ headerShown: false }} />
-          <Stack.Screen name="player" options={{ headerShown: false, presentation: 'modal' }} />
+          <Stack.Screen name="player" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>
       </NavigationGuard>
